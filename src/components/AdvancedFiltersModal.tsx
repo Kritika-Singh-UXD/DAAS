@@ -90,6 +90,9 @@ export default function AdvancedFiltersModal({ isOpen, onClose }: AdvancedFilter
   const uniqueProfessions = [...new Set(data.map(d => d.professionalRole))].sort();
   const uniqueAgeGroups = [...new Set(data.map(d => d.predictedAgeGroup))];
   const uniqueGenders = [...new Set(data.map(d => d.predictedGender))];
+  const uniqueDrugs = [...new Set(data.flatMap(d => d.drugNames))].sort();
+  const uniqueCompanies = [...new Set(data.flatMap(d => d.manufacturers || []))].sort();
+  const uniqueTherapeuticAreas = [...new Set(data.flatMap(d => d.therapeuticAreas))].sort();
 
   const MultiSelect = ({ 
     label, 
@@ -275,9 +278,9 @@ export default function AdvancedFiltersModal({ isOpen, onClose }: AdvancedFilter
             />
           </div>
 
-          {/* Clinical Section */}
+          {/* Professional Details */}
           <div>
-            <h3 className="text-md font-medium text-gray-900 mb-3">Clinical</h3>
+            <h3 className="text-md font-medium text-gray-900 mb-3">Professional Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <MultiSelect
                 label="Specialties"
@@ -293,6 +296,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose }: AdvancedFilter
               />
             </div>
           </div>
+
 
           {/* Save Preset Section */}
           <div>

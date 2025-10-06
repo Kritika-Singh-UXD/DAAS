@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import OverviewCards from '@/components/OverviewCards';
-import FiltersPanel from '@/components/FiltersPanel';
 import FilterBar from '@/components/FilterBar';
 import FilterProvider from '@/components/FilterProvider';
 import AdvancedFiltersModal from '@/components/AdvancedFiltersModal';
@@ -15,19 +14,15 @@ import DataTable from '@/components/DataTable';
 import CitationExplorer from '@/components/CitationExplorer';
 import { 
   LayoutDashboard, 
-  Filter, 
   TrendingUp, 
   Pill, 
   Table, 
   FileText,
-  Menu,
-  X,
   Activity
 } from 'lucide-react';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(false); // Start with sidebar closed for filter-first layout
   const [advancedFiltersOpen, setAdvancedFiltersOpen] = useState(false);
 
   const tabs = [
@@ -65,17 +60,11 @@ export default function Dashboard() {
           setActiveTab(tabs[tabIndex].id);
         }
       }
-
-      // Toggle sidebar (Ctrl/Cmd + B)
-      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-        e.preventDefault();
-        setSidebarOpen(!sidebarOpen);
-      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [sidebarOpen, tabs]);
+  }, [tabs]);
   
   return (
     <FilterProvider>
@@ -95,36 +84,28 @@ export default function Dashboard() {
         </a>
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 text-gray-600 hover:bg-gray-100 lg:hidden border border-gray-300 rounded-lg"
-              >
-                {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-              <div className="flex items-center gap-3 ml-2 lg:ml-0">
-                <div className="h-8 w-8 border-2 border-blue-600 bg-blue-50 flex items-center justify-center rounded-lg">
-                  <Activity className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900">Synduct Signals</h1>
-                  <p className="text-xs text-gray-600">Healthcare Analytics Platform</p>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 border-2 border-blue-600 bg-blue-50 flex items-center justify-center rounded-lg">
+                <Activity className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Synduct Signals</h1>
+                <p className="text-xs text-gray-600">Healthcare Analytics Platform</p>
               </div>
             </div>
             
             {/* Desktop Tab Navigation */}
-            <nav className="hidden lg:flex items-center space-x-2" role="navigation" aria-label="Main navigation">
+            <nav className="hidden md:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium border ${
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'text-gray-700 hover:bg-blue-50 border-gray-300 bg-white'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-blue-50'
                   }`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                   title={`${tab.label} (Ctrl+${tabs.indexOf(tab) + 1})`}
@@ -138,57 +119,41 @@ export default function Dashboard() {
         </div>
       </header>
       
-      {/* Filter Bar - Primary entry point */}
-      <div id="filter-bar">
+      {/* Enhanced Filter Bar */}
+      <div className="bg-gray-50 border-b border-gray-200 sticky top-16 z-30">
         <FilterBar onAdvancedFiltersOpen={() => setAdvancedFiltersOpen(true)} />
       </div>
       
-      <div className="flex">
-        {/* Legacy Sidebar - Hidden but preserved */}
-        <aside className={`${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } fixed lg:static inset-y-0 left-0 z-30 w-80 bg-white border-r border-gray-200 lg:translate-x-0 mt-32 lg:mt-0 shadow-lg lg:shadow-none ${
-          !sidebarOpen ? 'lg:-translate-x-full' : ''
-        }`}>
-          <div className="h-[calc(100vh-8rem)] overflow-y-auto">
-            <div className="p-4 bg-yellow-50 border-b border-yellow-200">
-              <p className="text-xs text-yellow-800">
-                Legacy filters. Use the filter bar above for new filter experience.
-              </p>
-            </div>
-            <FiltersPanel />
+      {/* Mobile Tab Navigation */}
+      <div className="md:hidden bg-white border-b border-gray-200 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex space-x-1 py-3">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-blue-50'
+                }`}
+              >
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            ))}
           </div>
-        </aside>
-        
-        {/* Main Content */}
-        <main 
-          id="main-content"
-          className={`flex-1 bg-gradient-to-br from-gray-50 to-white transition-all duration-200 ${
-            sidebarOpen ? 'lg:ml-0' : ''
-          }`}
-          role="main"
-          aria-label="Dashboard content"
-        >
-          <div className="max-w-7xl mx-auto px-6 py-8">
-          {/* Mobile Tab Navigation */}
-          <div className="lg:hidden mb-4 overflow-x-auto">
-            <div className="flex space-x-2 pb-2">
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 text-sm font-medium whitespace-nowrap border ${
-                    activeTab === tab.id
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 hover:bg-blue-50 border-gray-300'
-                  }`}
-                >
-                  <tab.icon className="h-4 w-4" />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main 
+        id="main-content"
+        className="min-h-screen bg-gradient-to-br from-gray-50 to-white"
+        role="main"
+        aria-label="Dashboard content"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           
           {/* Tab Content */}
           <div className="space-y-8">
@@ -197,10 +162,10 @@ export default function Dashboard() {
                 <SuggestedFilters />
                 
                 {/* KPIs Section */}
-                <section className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Key Metrics</h2>
-                    <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded"></div>
+                <section className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-3xl font-bold text-gray-900">Key Metrics</h2>
+                    <div className="h-1 flex-1 max-w-32 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
                   </div>
                   <OverviewCards />
                 </section>
@@ -209,34 +174,34 @@ export default function Dashboard() {
                 <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                   {/* Main Chart Area */}
                   <div className="xl:col-span-2 space-y-8">
-                    <div data-section="trends" className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                       <TrendsChart />
                     </div>
                     
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                       <EmergingSignals />
                     </div>
                   </div>
 
                   {/* Sidebar Content */}
                   <div className="space-y-8">
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                       <TopDrugsAreas />
                     </div>
                     
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                       <CitationExplorer />
                     </div>
                   </div>
                 </section>
 
                 {/* Geographic Section */}
-                <section className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900">Geographic Distribution</h2>
-                    <div className="h-1 w-24 bg-gradient-to-r from-green-500 to-blue-500 rounded"></div>
+                <section className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-3xl font-bold text-gray-900">Geographic Distribution</h2>
+                    <div className="h-1 flex-1 max-w-32 bg-gradient-to-r from-green-500 to-blue-500 rounded-full"></div>
                   </div>
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                     <GeoHeatcardsGrid />
                   </div>
                 </section>
@@ -244,40 +209,31 @@ export default function Dashboard() {
             )}
             
             {activeTab === 'trends' && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                 <TrendsChart />
               </div>
             )}
             
             {activeTab === 'drugs' && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                 <TopDrugsAreas />
               </div>
             )}
             
             {activeTab === 'data' && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                 <DataTable />
               </div>
             )}
             
             {activeTab === 'citations' && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
                 <CitationExplorer />
               </div>
             )}
           </div>
-          </div>
-        </main>
-      </div>
-      
-      {/* Overlay for mobile sidebar */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+        </div>
+      </main>
       
       {/* Advanced Filters Modal */}
       <AdvancedFiltersModal
@@ -286,14 +242,18 @@ export default function Dashboard() {
       />
       
       {/* Keyboard Shortcuts Indicator */}
-      <div className="fixed bottom-4 right-4 z-30">
-        <div className="bg-gray-800 text-white text-xs px-3 py-2 rounded-lg shadow-lg opacity-75 hover:opacity-100 transition-opacity">
-          <div className="flex items-center gap-2">
-            <span>⌘K</span>
-            <span className="text-gray-300">Filters</span>
-            <span className="text-gray-500">•</span>
-            <span>⌘1-5</span>
-            <span className="text-gray-300">Tabs</span>
+      <div className="fixed bottom-6 right-6 z-30">
+        <div className="bg-gray-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg opacity-80 hover:opacity-100 transition-all hover:scale-105">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">⌘K</kbd>
+              <span className="text-gray-300">Advanced Filters</span>
+            </div>
+            <span className="text-gray-600">•</span>
+            <div className="flex items-center gap-1">
+              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">⌘1-5</kbd>
+              <span className="text-gray-300">Switch Tabs</span>
+            </div>
           </div>
         </div>
       </div>

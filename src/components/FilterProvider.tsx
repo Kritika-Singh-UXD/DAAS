@@ -10,12 +10,12 @@ interface FilterProviderProps {
 
 export default function FilterProvider({ children }: FilterProviderProps) {
   const { filters } = useFilters();
-  const { applyNewFilters } = useDashboardStore();
+  const { applyFilters } = useDashboardStore();
 
   // Apply filters whenever they change
   useEffect(() => {
-    applyNewFilters(filters);
-  }, [filters, applyNewFilters]);
+    applyFilters(filters);
+  }, [filters, applyFilters]);
 
   return <>{children}</>;
 }

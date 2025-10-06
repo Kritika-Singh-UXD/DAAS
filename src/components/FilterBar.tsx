@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Filter, X, Settings, Calendar } from 'lucide-react';
+import { Filter, X, Settings } from 'lucide-react';
 import { useFilters } from '@/hooks/useFilters';
 import { useDashboardStore } from '@/store/dashboardStore';
 
@@ -54,32 +54,32 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
   );
 
   const DateRangePicker = () => (
-    <div className="flex-1 min-w-60">
+    <div className="min-w-fit">
       <label className="block text-xs font-medium text-gray-700 mb-1">Date Range</label>
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <input
           type="date"
           value={filters.dateFrom || ''}
           onChange={(e) => setPartial({ dateFrom: e.target.value })}
-          className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-36 px-2 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
-        <span className="self-center text-gray-500 px-2">to</span>
+        <span className="self-center text-gray-500 px-1 text-xs">to</span>
         <input
           type="date"
           value={filters.dateTo || ''}
           onChange={(e) => setPartial({ dateTo: e.target.value })}
-          className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-36 px-2 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>
   );
 
   const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
-    <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-md">
+    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-blue-200 text-blue-800 text-sm rounded-lg shadow-sm">
       {label}
       <button
         onClick={onRemove}
-        className="hover:bg-blue-200 rounded"
+        className="hover:bg-blue-100 rounded-full p-0.5 transition-colors"
         aria-label={`Remove ${label} filter`}
       >
         <X className="h-3 w-3" />
@@ -162,8 +162,8 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
   const hasActiveFilters = activeChips.length > 0 || filters.dateFrom || filters.dateTo;
 
   return (
-    <div className="bg-white border-b border-gray-200 shadow-sm">
-      {/* Top Filter Bar */}
+    <div className="bg-white shadow-sm">
+      {/* Primary Filter Controls */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-wrap gap-4 items-end">
           <QuickMultiSelect
@@ -192,36 +192,58 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
           
           <DateRangePicker />
           
-          <button
-            onClick={onAdvancedFiltersOpen}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 rounded-lg transition-colors h-10"
-          >
-            <Settings className="h-4 w-4" />
-            Advanced Filters
-          </button>
+          <div className="flex gap-2 ml-auto">
+            <button
+              onClick={onAdvancedFiltersOpen}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors h-10 whitespace-nowrap shadow-sm"
+            >
+              <Settings className="h-4 w-4" />
+              More Filters
+            </button>
+            {hasActiveFilters && (
+              <button
+                onClick={() => clearAll(true)}
+                className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors h-10"
+                title="Clear all filters"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
       
       {/* Active Filter Chips */}
       {hasActiveFilters && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-sm font-medium text-gray-700">Active filters:</span>
-            {activeChips.map(chip => (
-              <FilterChip
-                key={chip.key}
-                label={chip.label}
-                onRemove={chip.onRemove}
-              />
-            ))}
-            {activeChips.length > 0 && (
-              <button
-                onClick={() => clearAll(true)}
-                className="text-sm text-gray-500 hover:text-gray-700 underline ml-2 font-medium"
-              >
-                Clear all
-              </button>
-            )}
+        <div className="bg-blue-50 border-t border-blue-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-sm font-medium text-blue-900 flex items-center gap-1">
+                <Filter className="h-4 w-4" />
+                Applied filters:
+              </span>
+              {activeChips.map(chip => (
+                <FilterChip
+                  key={chip.key}
+                  label={chip.label}
+                  onRemove={chip.onRemove}
+                />
+              ))}
+              {(filters.dateFrom || filters.dateTo) && (
+                <FilterChip
+                  label={`Date: ${filters.dateFrom || '...'} to ${filters.dateTo || '...'}`}
+                  onRemove={() => setPartial({ dateFrom: undefined, dateTo: undefined })}
+                />
+              )}
+              <div className="ml-auto">
+                <button
+                  onClick={() => clearAll(true)}
+                  className="text-sm text-blue-700 hover:text-blue-900 font-medium px-3 py-1 hover:bg-blue-100 rounded-md transition-colors"
+                >
+                  Clear all
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

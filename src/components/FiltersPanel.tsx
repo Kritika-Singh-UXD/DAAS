@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { useFilters } from '@/hooks/useFilters';
 import { ChevronDown, X, Filter, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function FiltersPanel() {
-  const { data, legacyFilters: filters, setLegacyFilter: setFilter, resetLegacyFilters: resetFilters } = useDashboardStore();
+  const { data } = useDashboardStore();
+  const { filters, setPartial, clearAll } = useFilters();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
   
   // Extract unique values for filters
@@ -111,7 +113,7 @@ export default function FiltersPanel() {
           <h3 className="font-semibold text-blue-900">Filters</h3>
         </div>
         <button
-          onClick={resetFilters}
+          onClick={() => clearAll(true)}
           className="flex items-center gap-1 px-3 py-1.5 text-xs text-blue-700 hover:bg-blue-100 border border-blue-300 rounded-lg transition-colors"
         >
           <RotateCcw className="h-3 w-3" />
@@ -125,8 +127,8 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Countries</label>
             <MultiSelect
               options={uniqueCountries}
-              selected={filters.country}
-              onChange={(values) => setFilter('country', values)}
+              selected={filters.country || []}
+              onChange={(values) => setPartial({ country: values })}
               placeholder="All countries"
             />
           </div>
@@ -135,8 +137,8 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Specialties</label>
             <MultiSelect
               options={uniqueSpecialties}
-              selected={filters.specialty}
-              onChange={(values) => setFilter('specialty', values)}
+              selected={filters.specialty || []}
+              onChange={(values) => setPartial({ specialty: values })}
               placeholder="All specialties"
             />
           </div>
@@ -145,35 +147,12 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Professional Roles</label>
             <MultiSelect
               options={uniqueRoles}
-              selected={filters.professionalRole}
-              onChange={(values) => setFilter('professionalRole', values)}
+              selected={filters.profession || []}
+              onChange={(values) => setPartial({ profession: values })}
               placeholder="All roles"
             />
           </div>
           
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Years of Experience: {filters.yearsExperience[0]} - {filters.yearsExperience[1]}
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="range"
-                min="0"
-                max="50"
-                value={filters.yearsExperience[0]}
-                onChange={(e) => setFilter('yearsExperience', [parseInt(e.target.value), filters.yearsExperience[1]])}
-                className="flex-1"
-              />
-              <input
-                type="range"
-                min="0"
-                max="50"
-                value={filters.yearsExperience[1]}
-                onChange={(e) => setFilter('yearsExperience', [filters.yearsExperience[0], parseInt(e.target.value)])}
-                className="flex-1"
-              />
-            </div>
-          </div>
         </FilterSection>
         
         <FilterSection title="Clinical Filters" id="clinical">
@@ -181,8 +160,8 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Therapeutic Areas</label>
             <MultiSelect
               options={uniqueTherapeuticAreas}
-              selected={filters.therapeuticArea}
-              onChange={(values) => setFilter('therapeuticArea', values)}
+              selected={filters.therapeuticArea || []}
+              onChange={(values) => setPartial({ therapeuticArea: values })}
               placeholder="All therapeutic areas"
             />
           </div>
@@ -191,8 +170,8 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Drug Names</label>
             <MultiSelect
               options={uniqueDrugs}
-              selected={filters.drugName}
-              onChange={(values) => setFilter('drugName', values)}
+              selected={filters.drug || []}
+              onChange={(values) => setPartial({ drug: values })}
               placeholder="All drugs"
             />
           </div>
@@ -203,8 +182,8 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Age Groups</label>
             <MultiSelect
               options={uniqueAgeGroups}
-              selected={filters.ageGroup}
-              onChange={(values) => setFilter('ageGroup', values)}
+              selected={filters.ageGroup || []}
+              onChange={(values) => setPartial({ ageGroup: values })}
               placeholder="All age groups"
             />
           </div>
@@ -213,41 +192,13 @@ export default function FiltersPanel() {
             <label className="block text-xs font-medium text-gray-700 mb-1">Gender</label>
             <MultiSelect
               options={uniqueGenders}
-              selected={filters.gender}
-              onChange={(values) => setFilter('gender', values)}
+              selected={filters.gender || []}
+              onChange={(values) => setPartial({ gender: values })}
               placeholder="All genders"
             />
           </div>
         </FilterSection>
         
-        <FilterSection title="Model Confidence" id="confidence">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Minimum Confidence: {(filters.confidenceThreshold * 100).toFixed(0)}%
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={filters.confidenceThreshold * 100}
-              onChange={(e) => setFilter('confidenceThreshold', parseInt(e.target.value) / 100)}
-              className="w-full"
-            />
-          </div>
-          
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Data Source</label>
-            <select
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={filters.dataSource}
-              onChange={(e) => setFilter('dataSource', e.target.value as 'all' | 'user' | 'model')}
-            >
-              <option value="all">All Data</option>
-              <option value="user">User Data Only</option>
-              <option value="model">Model-Derived Only</option>
-            </select>
-          </div>
-        </FilterSection>
       </div>
     </div>
   );
