@@ -50,7 +50,7 @@ export default function TopDrugsAreas() {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload[0]) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+        <div className="bg-white p-3 border border-gray-200 rounded-lg">
           <p className="font-medium text-sm text-gray-900">{payload[0].payload.fullName}</p>
           <p className="text-sm text-gray-600">
             Count: {formatNumber(payload[0].payload.count)}

@@ -150,7 +150,7 @@ export default function TrendsChart() {
       </div>
       
       {/* Chart */}
-      <div className="w-full h-80 bg-white">
+      <div className="w-full h-80 bg-white px-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart 
             data={trendData.data} 
@@ -171,11 +171,13 @@ export default function TrendsChart() {
             <Tooltip 
               contentStyle={{ 
                 backgroundColor: 'white',
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                fontSize: '12px',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '13px',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                padding: '12px 16px'
               }}
+              cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
             />
             {trendData.items.map((item, index) => (
               <Line

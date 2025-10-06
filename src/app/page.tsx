@@ -9,13 +9,11 @@ import TrendsChart from '@/components/TrendsChart';
 import EmergingSignals from '@/components/EmergingSignals';
 import GeoHeatcardsGrid from '@/components/GeoHeatcardsGrid';
 import SuggestedFilters from '@/components/SuggestedFilters';
-import TopDrugsAreas from '@/components/TopDrugsAreas';
 import DataTable from '@/components/DataTable';
 import CitationExplorer from '@/components/CitationExplorer';
 import { 
   LayoutDashboard, 
   TrendingUp, 
-  Pill, 
   Table, 
   FileText,
   Activity
@@ -28,7 +26,6 @@ export default function Dashboard() {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'trends', label: 'Trends', icon: TrendingUp },
-    { id: 'drugs', label: 'Top Drugs & Areas', icon: Pill },
     { id: 'data', label: 'Raw Data', icon: Table },
     { id: 'citations', label: 'Citations', icon: FileText },
   ];
@@ -52,8 +49,8 @@ export default function Dashboard() {
         setAdvancedFiltersOpen(false);
       }
 
-      // Tab navigation shortcuts (Ctrl/Cmd + 1-5)
-      if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '5') {
+      // Tab navigation shortcuts (Ctrl/Cmd + 1-4)
+      if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '4') {
         e.preventDefault();
         const tabIndex = parseInt(e.key) - 1;
         if (tabs[tabIndex]) {
@@ -83,7 +80,7 @@ export default function Dashboard() {
           Skip to filters
         </a>
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
@@ -171,25 +168,21 @@ export default function Dashboard() {
                 </section>
 
                 {/* Analytics Section */}
-                <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <section className="grid grid-cols-1 xl:grid-cols-3 gap-4">
                   {/* Main Chart Area */}
-                  <div className="xl:col-span-2 space-y-8">
-                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="xl:col-span-2 space-y-4">
+                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                       <TrendsChart />
                     </div>
                     
-                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                       <EmergingSignals />
                     </div>
                   </div>
 
                   {/* Sidebar Content */}
-                  <div className="space-y-8">
-                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
-                      <TopDrugsAreas />
-                    </div>
-                    
-                    <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="space-y-4">
+                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                       <CitationExplorer />
                     </div>
                   </div>
@@ -201,7 +194,7 @@ export default function Dashboard() {
                     <h2 className="text-3xl font-bold text-gray-900">Geographic Distribution</h2>
                     <div className="h-1 flex-1 max-w-32 bg-gradient-to-r from-green-500 to-blue-500 rounded-full"></div>
                   </div>
-                  <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+                  <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                     <GeoHeatcardsGrid />
                   </div>
                 </section>
@@ -209,25 +202,20 @@ export default function Dashboard() {
             )}
             
             {activeTab === 'trends' && (
-              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                 <TrendsChart />
               </div>
             )}
             
-            {activeTab === 'drugs' && (
-              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
-                <TopDrugsAreas />
-              </div>
-            )}
             
             {activeTab === 'data' && (
-              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                 <DataTable />
               </div>
             )}
             
             {activeTab === 'citations' && (
-              <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+              <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
                 <CitationExplorer />
               </div>
             )}
@@ -243,7 +231,7 @@ export default function Dashboard() {
       
       {/* Keyboard Shortcuts Indicator */}
       <div className="fixed bottom-6 right-6 z-30">
-        <div className="bg-gray-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg opacity-80 hover:opacity-100 transition-all hover:scale-105">
+        <div className="bg-gray-900 text-white text-xs px-4 py-3 rounded-xl opacity-80 hover:opacity-100 transition-all hover:scale-105">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
               <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">⌘K</kbd>
@@ -251,7 +239,7 @@ export default function Dashboard() {
             </div>
             <span className="text-gray-600">•</span>
             <div className="flex items-center gap-1">
-              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">⌘1-5</kbd>
+              <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">⌘1-4</kbd>
               <span className="text-gray-300">Switch Tabs</span>
             </div>
           </div>

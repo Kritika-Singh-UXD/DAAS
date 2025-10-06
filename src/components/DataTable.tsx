@@ -187,7 +187,7 @@ export default function DataTable() {
             </button>
             
             {showExportOptions && (
-              <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-10 min-w-48">
+              <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl z-10 min-w-48">
                 <div className="p-3 border-b border-gray-200">
                   <p className="text-xs font-medium text-gray-700 mb-1">Export Options</p>
                   <p className="text-xs text-gray-600">

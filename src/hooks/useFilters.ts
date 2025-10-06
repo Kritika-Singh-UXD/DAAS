@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { FilterState } from '@/types';
 
-const DEFAULT_DATE_FROM = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 90 days ago
+const DEFAULT_DATE_FROM = '2024-01-01'; // Match mock data start date
 const DEFAULT_DATE_TO = new Date().toISOString().split('T')[0]; // today
 
 export function useFilters() {

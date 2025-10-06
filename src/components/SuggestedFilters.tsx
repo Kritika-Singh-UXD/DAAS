@@ -101,7 +101,7 @@ export default function SuggestedFilters() {
           <button
             key={`${suggestion.type}-${suggestion.label}`}
             onClick={() => handleSuggestionClick(suggestion)}
-            className="text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-purple-300 hover:shadow-sm transition-all group"
+            className="text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-all group"
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex-1">

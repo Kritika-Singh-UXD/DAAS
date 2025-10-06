@@ -109,11 +109,11 @@ export default function OverviewCards() {
   ];
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
       {cards.map((card, index) => (
         <div
           key={index}
-          className={`bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 ${
+          className={`bg-white rounded-xl border border-gray-200 p-6 transition-all duration-200 ${
             card.clickable 
               ? 'cursor-pointer hover:border-blue-300 hover:bg-blue-50/50 group' 
               : ''

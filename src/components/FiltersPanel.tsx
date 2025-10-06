@@ -106,7 +106,7 @@ export default function FiltersPanel() {
   );
   
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-xl">
       <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-blue-50 rounded-t-xl">
         <div className="flex items-center gap-2">
           <Filter className="h-4 w-4 text-blue-600" />

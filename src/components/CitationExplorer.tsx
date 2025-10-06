@@ -1,215 +1,120 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { FileText, BookOpen, ExternalLink, Copy, Check } from 'lucide-react';
-import { formatNumber } from '@/lib/utils';
+import { ExternalLink } from 'lucide-react';
 
 export default function CitationExplorer() {
   const filteredData = useDashboardStore((state) => state.filteredData);
-  const [copiedDOI, setCopiedDOI] = useState<string | null>(null);
-  const [selectedJournal, setSelectedJournal] = useState<string | null>(null);
   
-  const citationStats = useMemo(() => {
-    const doiCounts = new Map<string, number>();
-    const journalCounts = new Map<string, number>();
-    const guidelineCounts = new Map<string, number>();
-    
+  const insights = useMemo(() => {
     let totalCitations = 0;
-    let totalQAwithCitations = 0;
+    let answersWithCitations = 0;
+    let answersWithoutCitations = 0;
+    const allDOIs: string[] = [];
     
     filteredData.forEach(item => {
       if (item.citationCount > 0) {
-        totalQAwithCitations++;
+        answersWithCitations++;
+        totalCitations += item.citationCount;
+        if (item.doiList) {
+          allDOIs.push(...item.doiList);
+        }
+      } else {
+        answersWithoutCitations++;
       }
-      totalCitations += item.citationCount;
-      
-      item.doiList.forEach(doi => {
-        doiCounts.set(doi, (doiCounts.get(doi) || 0) + 1);
-        
-        // Extract journal name from DOI (simplified)
-        const journalMatch = doi.match(/10\.\d+\/([^.]+)/);
-        if (journalMatch) {
-          const journal = journalMatch[1];
-          journalCounts.set(journal, (journalCounts.get(journal) || 0) + 1);
-        }
-      });
-      
-      item.sourceTypes.forEach(type => {
-        if (type === 'guideline') {
-          guidelineCounts.set('Clinical Guidelines', (guidelineCounts.get('Clinical Guidelines') || 0) + 1);
-        }
-      });
     });
     
-    const topDOIs = Array.from(doiCounts.entries())
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 10);
-    
-    const topJournals = Array.from(journalCounts.entries())
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 8);
-    
-    const avgCitationsPerQA = filteredData.length > 0 
-      ? (totalCitations / filteredData.length).toFixed(2)
-      : '0';
-    
-    const percentWithCitations = filteredData.length > 0
-      ? ((totalQAwithCitations / filteredData.length) * 100).toFixed(1)
-      : '0';
+    const uniqueDOIs = [...new Set(allDOIs)];
+    const averageCitationsPerAnswer = answersWithCitations > 0 ? (totalCitations / answersWithCitations).toFixed(1) : '0';
+    const evidenceBasedPercentage = filteredData.length > 0 ? Math.round((answersWithCitations / filteredData.length) * 100) : 0;
     
     return {
+      totalAnswers: filteredData.length,
+      answersWithCitations,
+      answersWithoutCitations,
       totalCitations,
-      totalQAwithCitations,
-      avgCitationsPerQA,
-      percentWithCitations,
-      topDOIs,
-      topJournals,
-      uniqueDOIs: doiCounts.size,
-      uniqueJournals: journalCounts.size,
+      uniqueDOIs: uniqueDOIs.length,
+      averageCitationsPerAnswer,
+      evidenceBasedPercentage,
+      sampleDOIs: uniqueDOIs.slice(0, 8)
     };
   }, [filteredData]);
   
-  const copyDOI = (doi: string) => {
-    navigator.clipboard.writeText(doi);
-    setCopiedDOI(doi);
-    setTimeout(() => setCopiedDOI(null), 2000);
-  };
-  
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-orange-100 rounded-lg">
-            <FileText className="h-5 w-5 text-orange-600" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900">Citation Explorer</h3>
-        </div>
-        <p className="text-sm text-gray-600">Track sources and references across Q&A pairs</p>
+    <div className="p-6 bg-white">
+      {/* Header */}
+      <div className="mb-4">
+        <h3 className="text-xl font-semibold text-gray-900">Evidence-Based Answers</h3>
+        <p className="text-sm text-gray-600 mt-1">
+          How many medical answers include scientific citations and references
+        </p>
       </div>
       
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-orange-700 mb-1">Total Citations</p>
-              <p className="text-2xl font-bold text-orange-900">{formatNumber(citationStats.totalCitations)}</p>
-            </div>
-            <div className="p-3 bg-orange-100 rounded-lg">
-              <FileText className="h-6 w-6 text-orange-600" />
-            </div>
-          </div>
+      {/* Key Insights */}
+      <div className="flex gap-2 mb-3">
+        <div className="flex-1 bg-green-50 border border-green-200 rounded-lg p-2 min-w-0">
+          <div className="text-lg font-bold text-green-900 truncate">{insights.evidenceBasedPercentage}%</div>
+          <div className="text-xs text-green-700 truncate">Evidence-Based</div>
         </div>
         
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-blue-700 mb-1">Unique DOIs</p>
-              <p className="text-2xl font-bold text-blue-900">{citationStats.uniqueDOIs}</p>
-            </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <BookOpen className="h-6 w-6 text-blue-600" />
-            </div>
-          </div>
+        <div className="flex-1 bg-blue-50 border border-blue-200 rounded-lg p-2 min-w-0">
+          <div className="text-lg font-bold text-blue-900 truncate">{insights.averageCitationsPerAnswer}</div>
+          <div className="text-xs text-blue-700 truncate">Avg Citations</div>
         </div>
-        
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-green-700 mb-1">Avg per Q&A</p>
-              <p className="text-2xl font-bold text-green-900">{citationStats.avgCitationsPerQA}</p>
+      </div>
+      
+      {/* Citation Breakdown */}
+      <div className="mb-3">
+        <div className="space-y-1">
+          <div className="flex items-center justify-between p-2 bg-green-50 border border-green-200 rounded">
+            <div className="flex-1 min-w-0 pr-2">
+              <div className="text-xs font-medium text-green-900 truncate">With Citations</div>
+              <div className="text-xs text-green-600 truncate">{insights.totalCitations} total</div>
             </div>
-            <div className="p-3 bg-green-100 rounded-lg text-2xl">📊</div>
+            <div className="text-sm font-bold text-green-900">{insights.answersWithCitations}</div>
           </div>
-        </div>
-        
-        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-purple-700 mb-1">Q&A with Citations</p>
-              <p className="text-2xl font-bold text-purple-900">{citationStats.percentWithCitations}%</p>
+          
+          <div className="flex items-center justify-between p-2 bg-gray-50 border border-gray-200 rounded">
+            <div className="flex-1 min-w-0 pr-2">
+              <div className="text-xs font-medium text-gray-700 truncate">Opinion Based</div>
+              <div className="text-xs text-gray-500 truncate">No citations</div>
             </div>
-            <div className="p-3 bg-purple-100 rounded-lg text-2xl">📚</div>
+            <div className="text-sm font-bold text-gray-700">{insights.answersWithoutCitations}</div>
           </div>
         </div>
       </div>
       
-      {/* Top Journals */}
-      <div className="mb-6">
-        <h4 className="text-lg font-semibold text-gray-900 mb-4">Top Journals & Sources</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {citationStats.topJournals.map(([journal, count]) => (
-            <button
-              key={journal}
-              onClick={() => setSelectedJournal(selectedJournal === journal ? null : journal)}
-              className={`p-4 border rounded-xl text-left transition-all ${
-                selectedJournal === journal
-                  ? 'border-orange-300 bg-orange-50'
-                  : 'border-gray-200 hover:border-orange-200 hover:bg-orange-50/50'
-              }`}
-            >
-              <div>
-                <p className="text-sm font-semibold text-gray-900 capitalize">{journal}</p>
-                <p className="text-xs text-gray-600 mt-1">{count} citations</p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      {/* DOI List */}
-      <div>
-        <h4 className="text-lg font-semibold text-gray-900 mb-4">Most Cited DOIs</h4>
-        <div className="space-y-3 max-h-80 overflow-y-auto">
-          {citationStats.topDOIs.map(([doi, count]) => (
-            <div
-              key={doi}
-              className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-orange-200 hover:bg-orange-50/50 transition-all"
-            >
-              <div className="flex-1 mr-4">
-                <code className="text-sm text-gray-700 break-all font-mono">{doi}</code>
-                <p className="text-sm text-gray-500 mt-2">Cited {count} times</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => copyDOI(doi)}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                  title="Copy DOI"
-                >
-                  {copiedDOI === doi ? (
-                    <Check className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </button>
+      {/* Sample Research Sources */}
+      {insights.sampleDOIs.length > 0 && (
+        <div className="mb-3">
+          <h4 className="text-xs font-medium text-gray-900 mb-1">Sample Sources</h4>
+          <div className="space-y-1">
+            {insights.sampleDOIs.slice(0, 4).map((doi, index) => (
+              <div key={doi} className="flex items-center gap-2 p-1 hover:bg-gray-50 rounded">
+                <code className="text-xs text-gray-600 font-mono truncate flex-1 min-w-0">{doi}</code>
                 <a
                   href={`https://doi.org/${doi}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                  title="Open DOI"
+                  className="text-xs text-blue-600 hover:text-blue-700 flex-shrink-0"
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  View
                 </a>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Citation Distribution */}
-      <div className="mt-6 p-4 bg-orange-50 border border-orange-200 rounded-xl">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-orange-100 rounded-lg">
-            <FileText className="h-5 w-5 text-orange-600" />
+            ))}
           </div>
-          <div>
-            <p className="text-base font-semibold text-orange-900">Citation Impact</p>
-            <p className="text-sm text-orange-700 mt-2">
-              {citationStats.uniqueJournals} unique journals referenced across {formatNumber(citationStats.totalQAwithCitations)} Q&A pairs,
-              demonstrating broad evidence-based responses with an average of {citationStats.avgCitationsPerQA} citations per answer.
-            </p>
+        </div>
+      )}
+      
+      {/* What This Means */}
+      <div className="p-3 bg-gray-50 border border-gray-200 rounded">
+        <div className="text-xs">
+          <div className="font-medium text-gray-900 mb-1">What this shows:</div>
+          <div className="text-gray-600 space-y-0.5">
+            <div>• Evidence-based answers cite scientific papers</div>
+            <div>• Higher % = more scientific backing</div>
+            <div>• DOIs link to actual research studies</div>
           </div>
         </div>
       </div>

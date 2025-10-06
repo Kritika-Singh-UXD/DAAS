@@ -75,7 +75,7 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
   );
 
   const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
-    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-blue-200 text-blue-800 text-sm rounded-lg shadow-sm">
+    <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-blue-200 text-blue-800 text-sm rounded-lg">
       {label}
       <button
         onClick={onRemove}
@@ -162,7 +162,7 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
   const hasActiveFilters = activeChips.length > 0 || filters.dateFrom || filters.dateTo;
 
   return (
-    <div className="bg-white shadow-sm">
+    <div className="bg-white">
       {/* Primary Filter Controls */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-wrap gap-4 items-end">
@@ -195,7 +195,7 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
           <div className="flex gap-2 ml-auto">
             <button
               onClick={onAdvancedFiltersOpen}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors h-10 whitespace-nowrap shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors h-10 whitespace-nowrap"
             >
               <Settings className="h-4 w-4" />
               More Filters
