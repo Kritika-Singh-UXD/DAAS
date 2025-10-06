@@ -100,7 +100,7 @@ export default function TrendsChart() {
     };
   }, [trendType, timeRange]);
   
-  const colors = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'];
+  const colors = ['#214498', '#1B3A84', '#163070', '#4A6FB0', '#6E94C8'];
   
   return (
     <div className="p-6 bg-white">
@@ -123,7 +123,7 @@ export default function TrendsChart() {
           <select
             value={trendType}
             onChange={(e) => setTrendType(e.target.value as TrendType)}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-primary-500"
           >
             <option value="drug">Drugs</option>
             <option value="therapeutic">Therapeutic Areas</option>
@@ -137,7 +137,7 @@ export default function TrendsChart() {
                 className={cn(
                   "px-2 py-1.5 text-xs",
                   timeRange === range
-                    ? "bg-blue-600 text-white"
+                    ? "bg-primary-600 text-white"
                     : "text-gray-600 hover:bg-gray-50",
                   range === '3m' ? 'rounded-l-md' : range === '12m' ? 'rounded-r-md' : ''
                 )}
@@ -156,15 +156,15 @@ export default function TrendsChart() {
             data={trendData.data} 
             margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
           >
-            <CartesianGrid strokeDasharray="2 2" stroke="#f3f4f6" />
+            <CartesianGrid strokeDasharray="2 2" stroke="#E6EDF5" />
             <XAxis 
               dataKey="month" 
-              tick={{ fontSize: 11, fill: '#6b7280' }}
+              tick={{ fontSize: 11, fill: '#6B7280' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis 
-              tick={{ fontSize: 11, fill: '#6b7280' }}
+              tick={{ fontSize: 11, fill: '#6B7280' }}
               axisLine={false}
               tickLine={false}
             />
@@ -177,7 +177,7 @@ export default function TrendsChart() {
                 boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                 padding: '12px 16px'
               }}
-              cursor={{ stroke: '#e5e7eb', strokeWidth: 1 }}
+              cursor={{ stroke: '#C2D4E6', strokeWidth: 1 }}
             />
             {trendData.items.map((item, index) => (
               <Line

@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useFilters } from '@/hooks/useFilters';
 import { SignalCard } from '@/types';
-import { TrendingUp, Zap, ArrowUpRight } from 'lucide-react';
+import { TrendingUp, ArrowUpRight } from 'lucide-react';
 import { formatNumber } from '@/lib/utils';
 
 export default function EmergingSignals() {
@@ -133,15 +133,9 @@ export default function EmergingSignals() {
     return (
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
-          <div className="p-2 bg-purple-100 rounded-lg">
-            <Zap className="h-5 w-5 text-purple-600" />
-          </div>
           <h3 className="text-xl font-bold text-gray-900">Emerging Signals</h3>
         </div>
         <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
-          <div className="p-4 bg-white rounded-lg inline-block mb-4">
-            <Zap className="h-8 w-8 text-gray-400" />
-          </div>
           <p className="text-gray-600 text-base mb-2">
             No significant emerging signals detected in the current filtered dataset.
           </p>
@@ -158,9 +152,6 @@ export default function EmergingSignals() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Zap className="h-5 w-5 text-purple-600" />
-            </div>
             <h3 className="text-xl font-bold text-gray-900">Emerging Signals</h3>
           </div>
           <p className="text-sm text-gray-600">
@@ -173,11 +164,11 @@ export default function EmergingSignals() {
         {signals.map((signal) => (
           <div
             key={signal.id}
-            className="bg-white border border-gray-200 rounded-xl p-5 hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200 group"
+            className="bg-white border border-gray-200 rounded-xl p-5 hover:border-primary-300 hover:bg-primary-50/50 transition-all duration-200 group"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-purple-700">
+                <h4 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-primary-700">
                   {signal.title}
                 </h4>
                 <p className="text-xs text-gray-500 mt-1 line-clamp-1">
@@ -192,7 +183,7 @@ export default function EmergingSignals() {
             
             <button
               onClick={() => handleExploreSignal(signal)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 hover:border-purple-300 rounded-lg transition-colors group-hover:bg-purple-600 group-hover:text-white"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 border border-primary-500 hover:border-primary-600 rounded-lg transition-colors"
             >
               Explore this signal
               <ArrowUpRight className="h-4 w-4" />
@@ -201,8 +192,8 @@ export default function EmergingSignals() {
         ))}
       </div>
 
-      <div className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
-        <p className="text-sm text-purple-700">
+      <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-xl">
+        <p className="text-sm text-primary-700">
           <strong>Methodology:</strong> Signals are identified by comparing activity in the last 30 days 
           vs. the previous 30 days. Only items with significant increases (&gt;20%) and minimum 
           activity thresholds are shown.

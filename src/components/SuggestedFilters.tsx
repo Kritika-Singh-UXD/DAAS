@@ -86,43 +86,57 @@ export default function SuggestedFilters() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 p-6 rounded-lg">
-      <div className="flex items-center gap-2 mb-4">
-        <Sparkles className="h-5 w-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Suggested Filters</h3>
+    <div className="bg-white border border-gray-200 p-6 rounded-xl">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-gray-100 rounded-lg">
+            <Sparkles className="h-5 w-5 text-gray-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Quick Start Suggestions</h3>
+            <p className="text-sm text-gray-600 mt-0.5">
+              Start exploring with these popular filters from your dataset
+            </p>
+          </div>
+        </div>
+        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full font-medium">
+          Based on your data
+        </span>
       </div>
-      
-      <p className="text-sm text-gray-600 mb-4">
-        Get started by exploring these popular categories from your dataset:
-      </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
         {suggestions.map((suggestion, index) => (
           <button
             key={`${suggestion.type}-${suggestion.label}`}
             onClick={() => handleSuggestionClick(suggestion)}
-            className="text-left p-4 bg-white border border-gray-200 rounded-lg hover:border-purple-300 transition-all group"
+            className="text-left p-4 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 transition-all group"
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex-1">
-                <h4 className="font-medium text-gray-900 text-sm line-clamp-2 group-hover:text-purple-700">
+                <h4 className="font-medium text-gray-900 text-sm line-clamp-2 group-hover:text-blue-700">
                   {suggestion.label}
                 </h4>
                 <p className="text-xs text-gray-500 mt-1">
                   {suggestion.subtitle}
                 </p>
               </div>
-              <TrendingUp className="h-4 w-4 text-gray-400 group-hover:text-purple-500 flex-shrink-0 ml-2" />
+              <TrendingUp className="h-4 w-4 text-gray-400 group-hover:text-blue-500 flex-shrink-0 ml-2" />
             </div>
           </button>
         ))}
       </div>
       
-      <div className="mt-4 p-3 bg-white rounded border border-gray-200">
-        <p className="text-xs text-gray-600">
-          <strong>Tip:</strong> Click any suggestion above to apply that filter and see focused results. 
-          You can combine multiple filters using the filter bar or advanced filters modal.
-        </p>
+      <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex gap-3">
+          <TrendingUp className="h-4 w-4 text-gray-600 flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-gray-900">First Time Here?</p>
+            <p className="text-xs text-gray-600">
+              Click any suggestion to instantly filter your data. Combine multiple filters to narrow your focus. 
+              Use the templates above for pre-configured analyses tailored to pharma use cases.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

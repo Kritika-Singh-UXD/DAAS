@@ -166,8 +166,8 @@ export default function DataTable() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Table className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-primary-100 rounded-lg">
+                <Table className="h-5 w-5 text-primary-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900">Raw Data Table</h3>
             </div>
@@ -179,7 +179,7 @@ export default function DataTable() {
           <div className="relative" ref={exportDropdownRef}>
             <button
               onClick={() => setShowExportOptions(!showExportOptions)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white border border-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white border border-primary-600 hover:bg-primary-700 rounded-lg transition-colors"
             >
               <Download className="h-4 w-4" />
               Export Data
@@ -197,13 +197,13 @@ export default function DataTable() {
                 <div className="p-2">
                   <button
                     onClick={() => handleExport('csv')}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-colors"
                   >
                     Export as CSV
                   </button>
                   <button
                     onClick={() => handleExport('xlsx')}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-colors"
                   >
                     Export as XLSX
                   </button>
@@ -224,7 +224,7 @@ export default function DataTable() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 rounded-lg"
             />
           </div>
           
@@ -234,7 +234,7 @@ export default function DataTable() {
               setPageSize(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg"
+            className="px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 rounded-lg"
           >
             <option value={10}>10 rows</option>
             <option value={25}>25 rows</option>
@@ -246,21 +246,21 @@ export default function DataTable() {
       
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-blue-50 border-b border-blue-200">
+          <thead className="bg-primary-50 border-b border-primary-200">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Question</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Specialty</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Drugs</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Therapeutic</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Confidence</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Citations</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Actions</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">ID</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Question</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Specialty</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Drugs</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Therapeutic</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Confidence</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Citations</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-primary-700 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {paginatedData.map((row) => (
-              <tr key={row.id} className="hover:bg-blue-50/50 transition-colors">
+              <tr key={row.id} className="hover:bg-primary-50/50 transition-colors">
                 <td className="px-4 py-3 text-sm text-gray-900 font-mono">{row.id}</td>
                 <td className="px-4 py-3 text-sm text-gray-900 max-w-xs truncate" title={row.question}>
                   {row.question}
@@ -269,7 +269,7 @@ export default function DataTable() {
                 <td className="px-4 py-3 text-sm">
                   <div className="flex flex-wrap gap-1">
                     {row.drugNames.slice(0, 2).map((drug, i) => (
-                      <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                      <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-700">
                         {drug}
                       </span>
                     ))}
@@ -281,7 +281,7 @@ export default function DataTable() {
                 <td className="px-4 py-3 text-sm">
                   <div className="flex flex-wrap gap-1">
                     {row.therapeuticAreas.map((area, i) => (
-                      <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                      <span key={i} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-100 text-primary-700">
                         {area}
                       </span>
                     ))}
@@ -303,7 +303,7 @@ export default function DataTable() {
                 <td className="px-4 py-3 text-sm">
                   <button
                     onClick={() => setSelectedRow(selectedRow === row.id ? null : row.id)}
-                    className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition-colors"
+                    className="p-2 text-primary-600 hover:text-primary-800 hover:bg-primary-100 rounded-lg transition-colors"
                   >
                     <Eye className="h-4 w-4" />
                   </button>
@@ -330,14 +330,14 @@ export default function DataTable() {
           <button
             onClick={() => setCurrentPage(1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed text-blue-600 hover:text-blue-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed text-primary-600 hover:text-primary-700 transition-colors"
           >
             <ChevronsLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed text-blue-600 hover:text-blue-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed text-primary-600 hover:text-primary-700 transition-colors"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -349,14 +349,14 @@ export default function DataTable() {
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed text-blue-600 hover:text-blue-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed text-primary-600 hover:text-primary-700 transition-colors"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
           <button
             onClick={() => setCurrentPage(totalPages)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed text-blue-600 hover:text-blue-700 transition-colors"
+            className="p-2 rounded-lg hover:bg-primary-100 disabled:opacity-50 disabled:cursor-not-allowed text-primary-600 hover:text-primary-700 transition-colors"
           >
             <ChevronsRight className="h-4 w-4" />
           </button>
@@ -364,10 +364,10 @@ export default function DataTable() {
       </div>
       
       {/* Export Disclosure */}
-      <div className="px-4 py-3 bg-blue-50 border-t border-blue-200">
+      <div className="px-4 py-3 bg-primary-50 border-t border-primary-200">
         <div className="flex items-start gap-2">
-          <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="text-xs text-blue-800">
+          <Shield className="h-4 w-4 text-primary-600 mt-0.5 flex-shrink-0" />
+          <div className="text-xs text-primary-800">
             <p className="font-medium mb-1">Export Data Privacy Notice</p>
             <p>
               You are exporting anonymized, aggregated data. Sensitive identifiers are excluded. 
@@ -378,7 +378,7 @@ export default function DataTable() {
       </div>
       
       {selectedRow && (
-        <div className="p-4 bg-blue-50 border-t border-blue-200">
+        <div className="p-4 bg-primary-50 border-t border-primary-200">
           <div className="max-w-4xl">
             {(() => {
               const row = paginatedData.find(r => r.id === selectedRow);

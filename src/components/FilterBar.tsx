@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Filter, X, Settings } from 'lucide-react';
 import { useFilters } from '@/hooks/useFilters';
 import { useDashboardStore } from '@/store/dashboardStore';
+import HelpTooltip from '@/components/HelpTooltip';
 
 interface FilterBarProps {
   onAdvancedFiltersOpen: () => void;
@@ -32,7 +33,27 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
     placeholder: string;
   }) => (
     <div className="flex-1 min-w-40">
-      <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1">
+        {label}
+        {label === 'Drug' && (
+          <HelpTooltip
+            content="Filter by specific drug names mentioned in physician interactions"
+            position="top"
+          />
+        )}
+        {label === 'Therapeutic Area' && (
+          <HelpTooltip
+            content="Focus on specific medical specialties or treatment categories"
+            position="top"
+          />
+        )}
+        {label === 'Company' && (
+          <HelpTooltip
+            content="Filter by pharmaceutical manufacturer or company"
+            position="top"
+          />
+        )}
+      </label>
       <select
         className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         value=""
@@ -55,7 +76,18 @@ export default function FilterBar({ onAdvancedFiltersOpen }: FilterBarProps) {
 
   const DateRangePicker = () => (
     <div className="min-w-fit">
-      <label className="block text-xs font-medium text-gray-700 mb-1">Date Range</label>
+      <label className="block text-xs font-medium text-gray-700 mb-1 flex items-center gap-1">
+        Date Range
+        <HelpTooltip
+          content="Select a time period to analyze trends and changes over time"
+          examples={[
+            "Last 7 days for recent activity",
+            "Last quarter for trend analysis",
+            "Year-over-year for comparisons"
+          ]}
+          position="top"
+        />
+      </label>
       <div className="flex gap-1">
         <input
           type="date"

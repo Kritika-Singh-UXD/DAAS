@@ -43,8 +43,8 @@ export default function TopDrugsAreas() {
   }, [filteredData, view, showPercentage]);
   
   const colors = [
-    '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444',
-    '#6366F1', '#EC4899', '#14B8A6', '#F97316', '#8B5A2B'
+    '#214498', '#1B3A84', '#163070', '#4A6FB0', '#6E94C8',
+    '#9DB8D7', '#C2D4E6', '#12265C', '#0D1C48', '#E6EDF5'
   ];
   
   const CustomTooltip = ({ active, payload }: any) => {
@@ -69,8 +69,8 @@ export default function TopDrugsAreas() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Pill className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-primary-100 rounded-lg">
+              <Pill className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="text-xl font-bold text-gray-900">
               Top {view === 'drugs' ? 'Drugs' : 'Therapeutic Areas'}
@@ -86,7 +86,7 @@ export default function TopDrugsAreas() {
             onClick={() => setShowPercentage(!showPercentage)}
             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
               showPercentage
-                ? 'bg-blue-600 text-white border-blue-600'
+                ? 'bg-primary-600 text-white border-primary-600'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
             }`}
           >
@@ -99,7 +99,7 @@ export default function TopDrugsAreas() {
               onClick={() => setView('drugs')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors ${
                 view === 'drugs'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -110,7 +110,7 @@ export default function TopDrugsAreas() {
               onClick={() => setView('therapeutic')}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-l border-gray-300 ${
                 view === 'therapeutic'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -127,17 +127,17 @@ export default function TopDrugsAreas() {
           layout="horizontal"
           margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#C2D4E6" />
           <XAxis 
             type="number"
             tick={{ fontSize: 12 }}
-            stroke="#6b7280"
+            stroke="#6B7280"
           />
           <YAxis 
             type="category"
             dataKey="name"
             tick={{ fontSize: 12 }}
-            stroke="#6b7280"
+            stroke="#6B7280"
             width={90}
           />
           <Tooltip content={<CustomTooltip />} />
@@ -150,18 +150,18 @@ export default function TopDrugsAreas() {
       </ResponsiveContainer>
       
       <div className="mt-6 grid grid-cols-2 gap-4">
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
-          <p className="text-sm font-medium text-blue-700 mb-2">Total Unique {view === 'drugs' ? 'Drugs' : 'Areas'}</p>
-          <p className="text-2xl font-bold text-blue-900">
+        <div className="p-4 bg-primary-50 border border-primary-200 rounded-xl">
+          <p className="text-sm font-medium text-primary-700 mb-2">Total Unique {view === 'drugs' ? 'Drugs' : 'Areas'}</p>
+          <p className="text-2xl font-bold text-primary-900">
             {view === 'drugs' 
               ? new Set(filteredData.flatMap(d => d.drugNames)).size
               : new Set(filteredData.flatMap(d => d.therapeuticAreas)).size
             }
           </p>
         </div>
-        <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
-          <p className="text-sm font-medium text-green-700 mb-2">Average per Q&A</p>
-          <p className="text-2xl font-bold text-green-900">
+        <div className="p-4 bg-primary-50 border border-primary-200 rounded-xl">
+          <p className="text-sm font-medium text-primary-700 mb-2">Average per Q&A</p>
+          <p className="text-2xl font-bold text-primary-900">
             {view === 'drugs'
               ? (filteredData.reduce((sum, d) => sum + d.drugCount, 0) / filteredData.length).toFixed(1)
               : (filteredData.reduce((sum, d) => sum + d.therapeuticAreas.length, 0) / filteredData.length).toFixed(1)

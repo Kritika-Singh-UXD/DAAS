@@ -112,8 +112,8 @@ export default function GeoHeatcardsGrid() {
     return (
       <div className="p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-green-100 rounded-lg">
-            <Globe className="h-5 w-5 text-green-600" />
+          <div className="p-2 bg-primary-100 rounded-lg">
+            <Globe className="h-5 w-5 text-primary-600" />
           </div>
           <h3 className="text-xl font-bold text-gray-900">Geographic Distribution</h3>
         </div>
@@ -134,8 +134,8 @@ export default function GeoHeatcardsGrid() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <Globe className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-primary-100 rounded-lg">
+              <Globe className="h-5 w-5 text-primary-600" />
             </div>
             <h3 className="text-xl font-bold text-gray-900">Geographic Distribution</h3>
           </div>
@@ -149,7 +149,7 @@ export default function GeoHeatcardsGrid() {
         {geoData.map((geo) => (
           <div
             key={geo.country}
-            className="bg-white border border-gray-200 rounded-xl p-5 hover:border-green-300 hover:bg-green-50/50 transition-all duration-200 cursor-pointer group"
+            className="bg-white border border-gray-200 rounded-xl p-5 hover:border-primary-300 hover:bg-primary-50/50 transition-all duration-200 cursor-pointer group"
             onClick={() => handleCountryClick(geo.country)}
             role="button"
             tabIndex={0}
@@ -162,7 +162,7 @@ export default function GeoHeatcardsGrid() {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 text-sm group-hover:text-green-700">
+                <h4 className="font-semibold text-gray-900 text-sm group-hover:text-primary-700">
                   {geo.country}
                 </h4>
                 <div className="flex items-center gap-2 mt-2">
@@ -189,15 +189,15 @@ export default function GeoHeatcardsGrid() {
               </div>
             </div>
             
-            <div className="text-xs text-gray-500 group-hover:text-green-600 transition-colors">
+            <div className="text-xs text-gray-500 group-hover:text-primary-600 transition-colors">
               Click to filter by {geo.country}
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
-        <p className="text-sm text-green-700">
+      <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-xl">
+        <p className="text-sm text-primary-700">
           <strong>Trend Indicators:</strong> Percentage change compares last 30 days vs previous 30 days. 
           Sparklines show activity distribution over recent periods.
         </p>
