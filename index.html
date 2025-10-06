@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        
+        .clear-filters {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .clear-filters:hover {
+            color: #357abd;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filter-select {
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .filter-select:hover {
+            border-color: #cbd5e0;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
+        /* Quick Start Templates */
+        .templates-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        
+        .view-all {
+            color: #4a90e2;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        
+        .view-all:hover {
+            color: #357abd;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .template-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .template-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        
+        .template-description {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        .template-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+        
+        /* Trends & Insights */
+        .insights-section {
+            margin-bottom: 40px;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .trends-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .trends-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+        }
+        
+        .trend-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .trend-item:last-child {
+            border-bottom: none;
+        }
+        
+        .trend-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: #3b82f6;
+        }
+        
+        .trend-content {
+            flex: 1;
+        }
+        
+        .trend-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 4px;
+        }
+        
+        .trend-metric {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .trend-badge {
+            padding: 4px 8px;
+            background: #10b981;
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .trend-badge.down {
+            background: #ef4444;
+        }
+        
+        .discovery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .discovery-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .discovery-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 15px;
+        }
+        
+        .discovery-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .discovery-item:last-child {
+            border-bottom: none;
+        }
+        
+        .discovery-label {
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        .discovery-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+        
+        @media (max-width: 768px) {
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filters-header">
+                <h2 class="filters-title">Filters</h2>
+                <a href="#" class="clear-filters">Clear all</a>
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Date Range</label>
+                    <select class="filter-select">
+                        <option>Last 30 days</option>
+                        <option>Last 7 days</option>
+                        <option>Last 90 days</option>
+                        <option>Custom range</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Sales</option>
+                        <option>Marketing</option>
+                        <option>Operations</option>
+                        <option>Finance</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Region</label>
+                    <select class="filter-select">
+                        <option>All Regions</option>
+                        <option>North America</option>
+                        <option>Europe</option>
+                        <option>Asia Pacific</option>
+                        <option>Latin America</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Pending</option>
+                        <option>Completed</option>
+                        <option>Archived</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Start Templates -->
+        <div class="templates-section">
+            <div class="section-header">
+                <h2 class="section-title">Quick Start Templates</h2>
+                <a href="#" class="view-all">View all →</a>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-icon">📊</div>
+                    <h3 class="template-title">Sales Dashboard</h3>
+                    <p class="template-description">Track your sales performance with real-time metrics and conversion analytics</p>
+                    <span class="template-tag">Popular</span>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">📈</div>
+                    <h3 class="template-title">Marketing Analytics</h3>
+                    <p class="template-description">Monitor campaign performance and ROI across all marketing channels</p>
+                    <span class="template-tag">New</span>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">💰</div>
+                    <h3 class="template-title">Financial Reports</h3>
+                    <p class="template-description">Generate comprehensive financial statements and budget tracking</p>
+                    <span class="template-tag">Essential</span>
+                </div>
+                <div class="template-card">
+                    <div class="template-icon">👥</div>
+                    <h3 class="template-title">Customer Insights</h3>
+                    <p class="template-description">Understand customer behavior and preferences with detailed analytics</p>
+                    <span class="template-tag">Trending</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Trends & Insights Discovery -->
+        <div class="insights-section">
+            <div class="section-header">
+                <h2 class="section-title">Trends & Insights Discovery</h2>
+                <a href="#" class="view-all">Explore more →</a>
+            </div>
+            <div class="insights-grid">
+                <div class="trends-container">
+                    <h3 class="trends-header">Latest Trends</h3>
+                    <div class="trend-item">
+                        <div class="trend-icon">📈</div>
+                        <div class="trend-content">
+                            <div class="trend-title">Revenue Growth</div>
+                            <div class="trend-metric">$2.4M this quarter</div>
+                        </div>
+                        <span class="trend-badge">+23%</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon">🎯</div>
+                        <div class="trend-content">
+                            <div class="trend-title">Conversion Rate</div>
+                            <div class="trend-metric">4.2% average</div>
+                        </div>
+                        <span class="trend-badge">+15%</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon">👥</div>
+                        <div class="trend-content">
+                            <div class="trend-title">User Engagement</div>
+                            <div class="trend-metric">8.5 min average session</div>
+                        </div>
+                        <span class="trend-badge down">-5%</span>
+                    </div>
+                    <div class="trend-item">
+                        <div class="trend-icon">🌍</div>
+                        <div class="trend-content">
+                            <div class="trend-title">Global Reach</div>
+                            <div class="trend-metric">142 countries</div>
+                        </div>
+                        <span class="trend-badge">+12%</span>
+                    </div>
+                </div>
+                
+                <div class="discovery-container">
+                    <div class="discovery-card">
+                        <h3 class="discovery-title">Key Discoveries</h3>
+                        <div class="discovery-item">
+                            <span class="discovery-label">Top Performer</span>
+                            <span class="discovery-value">North Region</span>
+                        </div>
+                        <div class="discovery-item">
+                            <span class="discovery-label">Best Product</span>
+                            <span class="discovery-value">Premium Plan</span>
+                        </div>
+                        <div class="discovery-item">
+                            <span class="discovery-label">Peak Hours</span>
+                            <span class="discovery-value">2-4 PM EST</span>
+                        </div>
+                    </div>
+                    
+                    <div class="discovery-card">
+                        <h3 class="discovery-title">Opportunities</h3>
+                        <div class="discovery-item">
+                            <span class="discovery-label">Untapped Market</span>
+                            <span class="discovery-value">Southeast Asia</span>
+                        </div>
+                        <div class="discovery-item">
+                            <span class="discovery-label">Growth Potential</span>
+                            <span class="discovery-value">+45% projected</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

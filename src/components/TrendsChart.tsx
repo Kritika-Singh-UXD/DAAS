@@ -36,71 +36,99 @@ export default function TrendsChart() {
   const [trendType, setTrendType] = useState<TrendType>('drug');
   const [timeRange, setTimeRange] = useState<'3m' | '6m' | '12m'>('6m');
   
-  // Enhanced sample data with realistic trends
+  // Generate trend data from filtered data
   const trendData = useMemo(() => {
     const now = new Date();
     const months = timeRange === '3m' ? 3 : timeRange === '6m' ? 6 : 12;
     
-    // Generate sample trend data based on type
-    const sampleData = {
-      drug: {
-        items: ['Adalimumab', 'Bevacizumab', 'Rituximab', 'Trastuzumab', 'Infliximab'],
-        patterns: [
-          [45, 52, 48, 58, 65, 72, 68, 75, 82, 78, 85, 92], // Adalimumab - growing
-          [38, 42, 46, 44, 49, 53, 57, 61, 59, 64, 68, 72], // Bevacizumab - steady growth
-          [52, 48, 51, 47, 50, 46, 49, 52, 48, 51, 55, 53], // Rituximab - stable
-          [28, 32, 35, 39, 42, 45, 48, 52, 55, 58, 61, 65], // Trastuzumab - rapid growth
-          [41, 39, 37, 35, 38, 36, 34, 37, 35, 33, 36, 34], // Infliximab - declining
-        ]
-      },
-      therapeutic: {
-        items: ['Oncology', 'Immunology', 'Cardiology', 'Neurology', 'Endocrinology'],
-        patterns: [
-          [125, 132, 128, 138, 145, 152, 148, 155, 162, 158, 165, 172],
-          [98, 102, 106, 104, 109, 113, 117, 121, 119, 124, 128, 132],
-          [87, 85, 88, 86, 89, 87, 90, 92, 88, 91, 95, 93],
-          [65, 68, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99],
-          [54, 52, 55, 53, 56, 54, 57, 59, 56, 58, 61, 59],
-        ]
-      },
-      icd: {
-        items: ['C78', 'I25', 'E11', 'G20', 'M06'],
-        patterns: [
-          [32, 35, 33, 37, 40, 43, 41, 44, 47, 45, 48, 51],
-          [28, 26, 29, 27, 30, 28, 31, 33, 30, 32, 35, 33],
-          [22, 25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55],
-          [18, 19, 17, 20, 18, 21, 19, 22, 20, 23, 21, 24],
-          [15, 14, 16, 15, 17, 16, 18, 19, 17, 18, 20, 19],
-        ]
-      }
-    };
+    // Group filtered data by the selected trend type
+    const grouped: { [key: string]: any[] } = {};
     
-    const currentData = sampleData[trendType];
+    filteredData.forEach(item => {
+      let key: string;
+      switch (trendType) {
+        case 'drug':
+          item.drugNames.forEach(drug => {
+            if (!grouped[drug]) grouped[drug] = [];
+            grouped[drug].push(item);
+          });
+          break;
+        case 'therapeutic':
+          item.therapeuticAreas.forEach(area => {
+            if (!grouped[area]) grouped[area] = [];
+            grouped[area].push(item);
+          });
+          break;
+        case 'icd':
+          if (item.icdCodes) {
+            item.icdCodes.forEach(code => {
+              if (!grouped[code]) grouped[code] = [];
+              grouped[code].push(item);
+            });
+          }
+          break;
+      }
+    });
+    
+    // Get top 5 items by data volume
+    const sortedItems = Object.entries(grouped)
+      .sort(([,a], [,b]) => b.length - a.length)
+      .slice(0, 5)
+      .map(([key]) => key);
+    
+    // Generate month labels
     const monthLabels = Array.from({ length: months }, (_, i) => {
       const date = subMonths(now, months - 1 - i);
       return format(date, 'MMM yyyy');
     });
     
+    // Generate patterns for each item
+    const patterns: number[][] = [];
+    const chartData = monthLabels.map((monthLabel, monthIndex) => {
+      const date = subMonths(now, months - 1 - monthIndex);
+      const monthStart = startOfMonth(date);
+      const nextMonthStart = startOfMonth(subMonths(date, -1));
+      
+      const dataPoint: any = { month: monthLabel };
+      
+      sortedItems.forEach((item, itemIndex) => {
+        const itemData = grouped[item] || [];
+        const monthCount = itemData.filter(d => {
+          const itemDate = new Date(d.timestamp);
+          return itemDate >= monthStart && itemDate < nextMonthStart;
+        }).length;
+        
+        dataPoint[item] = monthCount;
+        
+        // Initialize pattern array if not exists
+        if (!patterns[itemIndex]) patterns[itemIndex] = [];
+        patterns[itemIndex][monthIndex] = monthCount;
+      });
+      
+      return dataPoint;
+    });
+    
+    // Calculate stats
+    const totalCurrent = sortedItems.reduce((sum, item) => {
+      const itemData = grouped[item] || [];
+      return sum + itemData.length;
+    }, 0);
+    
+    const growth = patterns.length > 0 ? calculateGrowth(patterns) : 0;
+    const trending = patterns.length > 0 ? getTrendingItems(sortedItems, patterns) : [];
+    
     return {
-      data: monthLabels.map((month, monthIndex) => {
-        const dataPoint: any = { month };
-        currentData.items.forEach((item, itemIndex) => {
-          const pattern = currentData.patterns[itemIndex];
-          const startIndex = Math.max(0, pattern.length - months);
-          dataPoint[item] = pattern[startIndex + monthIndex] || 0;
-        });
-        return dataPoint;
-      }),
-      items: currentData.items,
+      data: chartData,
+      items: sortedItems,
       stats: {
-        total: currentData.patterns.reduce((sum, pattern) => sum + pattern[pattern.length - 1], 0),
-        growth: calculateGrowth(currentData.patterns),
-        trending: getTrendingItems(currentData.items, currentData.patterns)
+        total: totalCurrent,
+        growth,
+        trending
       }
     };
-  }, [trendType, timeRange]);
+  }, [filteredData, trendType, timeRange]);
   
-  const colors = ['#214498', '#1B3A84', '#163070', '#4A6FB0', '#6E94C8'];
+  const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6'];
   
   return (
     <div className="p-6 bg-white">
