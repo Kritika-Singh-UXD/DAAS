@@ -87,25 +87,25 @@ export default function KnowledgeGapFinder() {
         <h2 className="text-xl font-semibold text-gray-900">Knowledge Gap Finder</h2>
       </div>
       
-      {/* Enhanced Knowledge Gap Card */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-orange-50 to-red-50 border-b border-gray-100">
+      {/* Minimal Knowledge Gap Card */}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        {/* Clean Header */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Knowledge Gap Analysis</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <h3 className="text-lg font-semibold text-gray-900">Knowledge Gap Analysis</h3>
+            <p className="text-sm text-gray-500 mt-1">
               Identify high-volume, low-engagement topics that represent knowledge gaps
             </p>
           </div>
         </div>
 
         <div className="p-6">
-          {/* Enhanced Scatter Chart Section */}
+          {/* Clean Scatter Chart Section */}
           <div className="mb-8">
-            <div className="bg-gradient-to-br from-slate-50 via-orange-50 to-red-50 border border-slate-200 rounded-2xl shadow-inner p-6">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
               <div className="mb-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Gap Visualization</h4>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-500 mb-4">
                   Lower-right quadrant indicates high-volume, low-engagement topics (biggest opportunities)
                 </p>
                 
@@ -124,7 +124,7 @@ export default function KnowledgeGapFinder() {
                 </div>
               </div>
               
-              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-white/50">
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
                 <div className="h-80 w-full">
                   <ResponsiveContainer>
                     <ScatterChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
@@ -189,13 +189,13 @@ export default function KnowledgeGapFinder() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-4">
               <span className="text-sm font-medium text-gray-700">Sort by:</span>
-              <div className="inline-flex rounded-lg border border-gray-200 bg-gray-50">
+              <div className="inline-flex rounded-md border border-gray-200 bg-white">
                 <button
                   onClick={() => setSortBy("severity")}
-                  className={`px-4 py-2 text-sm font-medium rounded-l-lg transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-l-md transition-colors ${
                     sortBy === "severity" 
-                      ? "bg-orange-500 text-white shadow-sm" 
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-blue-500 text-white" 
+                      : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   Gap Severity
@@ -204,18 +204,18 @@ export default function KnowledgeGapFinder() {
                   onClick={() => setSortBy("volume")}
                   className={`px-4 py-2 text-sm font-medium transition-colors ${
                     sortBy === "volume" 
-                      ? "bg-orange-500 text-white shadow-sm" 
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-blue-500 text-white" 
+                      : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   Volume
                 </button>
                 <button
                   onClick={() => setSortBy("ctr")}
-                  className={`px-4 py-2 text-sm font-medium rounded-r-lg transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-r-md transition-colors ${
                     sortBy === "ctr" 
-                      ? "bg-orange-500 text-white shadow-sm" 
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-blue-500 text-white" 
+                      : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
                   Low CTR
@@ -224,19 +224,19 @@ export default function KnowledgeGapFinder() {
             </div>
           </div>
 
-          {/* Enhanced Layout */}
+          {/* Clean Layout */}
           <div className="flex gap-6">
-            {/* Enhanced Gaps Table */}
+            {/* Clean Gaps Table */}
             <div className="flex-1">
-              <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
-                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                   <h4 className="text-lg font-semibold text-gray-900">Knowledge Gaps</h4>
-                  <p className="text-sm text-gray-600 mt-1">Click on any gap for detailed analysis</p>
+                  <p className="text-sm text-gray-500 mt-1">Click on any gap for detailed analysis</p>
                 </div>
                 
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-white/60">
+                    <thead className="bg-gray-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Topic</th>
                         <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">Volume</th>
@@ -246,13 +246,13 @@ export default function KnowledgeGapFinder() {
                         <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Region</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white/30 divide-y divide-gray-200/50">
+                    <tbody className="bg-white divide-y divide-gray-200">
                       {sortedData.map((gap, index) => (
                         <tr 
                           key={index}
                           onClick={() => handlePointClick(gap)}
-                          className={`cursor-pointer transition-colors hover:bg-white/50 ${
-                            selectedGap === gap ? 'bg-orange-50/70' : ''
+                          className={`cursor-pointer transition-colors hover:bg-gray-50 ${
+                            selectedGap === gap ? 'bg-blue-50' : ''
                           }`}
                         >
                           <td className="px-4 py-3 text-sm font-medium text-gray-900">{gap.topic}</td>
@@ -260,7 +260,7 @@ export default function KnowledgeGapFinder() {
                             {gap.volume.toLocaleString()}
                           </td>
                           <td className="px-4 py-3 text-sm text-gray-700 text-right">
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                               {(gap.ctr * 100).toFixed(1)}%
                             </span>
                           </td>
@@ -284,12 +284,12 @@ export default function KnowledgeGapFinder() {
               </div>
             </div>
 
-            {/* Enhanced Side Panel */}
+            {/* Clean Side Panel */}
             {selectedGap && (
-              <div className="w-80 bg-gradient-to-br from-slate-50 to-orange-50 border border-gray-200 rounded-2xl shadow-inner p-6">
+              <div className="w-80 bg-white border border-gray-200 rounded-lg p-6">
                 <div className="mb-4">
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Gap Details</h4>
-                  <div className="w-12 h-1 bg-orange-400 rounded-full"></div>
+                  <div className="w-12 h-1 bg-blue-500 rounded-full"></div>
                 </div>
                 
                 <div className="space-y-4">

@@ -140,13 +140,13 @@ export default function SummaryGenerator() {
         <h2 className="text-xl font-semibold text-gray-900">Summary Generator</h2>
       </div>
       
-      {/* Enhanced Summary Generator Card */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-100">
+      {/* Summary Generator Card */}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        {/* Clean Header */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Summary & Export</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <h3 className="text-lg font-semibold text-gray-900">Summary & Export</h3>
+            <p className="text-sm text-gray-500 mt-1">
               Generate comprehensive summaries and export your analysis data
             </p>
           </div>
@@ -162,7 +162,7 @@ export default function SummaryGenerator() {
                 inline-flex items-center px-6 py-3 text-base font-medium rounded-lg transition-all duration-200
                 ${loading 
                   ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 hover:scale-105 active:scale-95'
+                  : 'bg-blue-500 hover:bg-blue-600 hover:scale-105 active:scale-95'
                 }
                 text-white shadow-lg
               `}
@@ -177,8 +177,8 @@ export default function SummaryGenerator() {
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                   Generate Summary
                 </>
@@ -188,12 +188,12 @@ export default function SummaryGenerator() {
 
           {summary && (
             <div className="space-y-6">
-              {/* Enhanced Summary Content */}
-              <div className="bg-gradient-to-br from-slate-50 to-indigo-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
-                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+              {/* Summary Content */}
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                   <div className="flex items-center justify-between">
                     <h4 className="text-lg font-semibold text-gray-900">Generated Summary</h4>
-                    <div className="text-sm text-gray-600 bg-white/60 px-3 py-1 rounded-full">
+                    <div className="text-sm text-gray-500 bg-white px-3 py-1 rounded-md border border-gray-200">
                       Generated: {new Date(summary.generatedAt).toLocaleDateString()} at {new Date(summary.generatedAt).toLocaleTimeString()}
                     </div>
                   </div>
@@ -202,9 +202,9 @@ export default function SummaryGenerator() {
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {/* Key Metrics Card */}
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                    <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                       <div className="flex items-center mb-4">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                           </svg>
@@ -222,9 +222,9 @@ export default function SummaryGenerator() {
                     </div>
 
                     {/* Emerging Topics Card */}
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                    <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                       <div className="flex items-center mb-4">
-                        <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"/>
                           </svg>
@@ -242,9 +242,9 @@ export default function SummaryGenerator() {
                     </div>
 
                     {/* Knowledge Gaps Card */}
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                    <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                       <div className="flex items-center mb-4">
-                        <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
                           </svg>
@@ -262,9 +262,9 @@ export default function SummaryGenerator() {
                     </div>
 
                     {/* Top Evidence Card */}
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                    <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                       <div className="flex items-center mb-4">
-                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                           </svg>
@@ -282,9 +282,9 @@ export default function SummaryGenerator() {
                     </div>
 
                     {/* Regional Highlights Card */}
-                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                    <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                       <div className="flex items-center mb-4">
-                        <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-3">
                           <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                           </svg>
@@ -304,11 +304,11 @@ export default function SummaryGenerator() {
                 </div>
               </div>
 
-              {/* Enhanced Export Section */}
-              <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
-                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+              {/* Export Section */}
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                   <h4 className="text-lg font-semibold text-gray-900">Export Options</h4>
-                  <p className="text-sm text-gray-600 mt-1">Download your analysis data in different formats</p>
+                  <p className="text-sm text-gray-500 mt-1">Download your analysis data in different formats</p>
                 </div>
                 
                 <div className="p-6">
@@ -320,7 +320,7 @@ export default function SummaryGenerator() {
                         inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
                         ${exporting 
                           ? 'bg-gray-400 cursor-not-allowed' 
-                          : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 active:scale-95'
+                          : 'bg-blue-500 hover:bg-blue-600 hover:scale-105 active:scale-95'
                         }
                         text-white shadow-md
                       `}
@@ -338,7 +338,7 @@ export default function SummaryGenerator() {
                         inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
                         ${exporting 
                           ? 'bg-gray-400 cursor-not-allowed' 
-                          : 'bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 hover:scale-105 active:scale-95'
+                          : 'bg-red-500 hover:bg-red-600 hover:scale-105 active:scale-95'
                         }
                         text-white shadow-md
                       `}

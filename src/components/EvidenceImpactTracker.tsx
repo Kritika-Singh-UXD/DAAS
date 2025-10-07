@@ -88,29 +88,29 @@ export default function EvidenceImpactTracker() {
         <h2 className="text-xl font-semibold text-gray-900">Evidence Impact Tracker</h2>
       </div>
       
-      {/* Enhanced Evidence Impact Card */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-purple-50 to-indigo-50 border-b border-gray-100">
+      {/* Minimal Evidence Impact Card */}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        {/* Clean Header */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Evidence Impact Analysis</h3>
-            <p className="text-sm text-gray-600 mt-1">
+            <h3 className="text-lg font-semibold text-gray-900">Evidence Impact Analysis</h3>
+            <p className="text-sm text-gray-500 mt-1">
               Track evidence engagement patterns and publication network relationships
             </p>
           </div>
         </div>
 
         <div className="p-6 space-y-8">
-          {/* Enhanced Timeline Chart */}
-          <div className="bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50 border border-slate-200 rounded-2xl shadow-inner p-6">
+          {/* Clean Timeline Chart */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
             <div className="mb-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-2">Evidence Engagement Timeline</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500">
                 Track how evidence engagement has evolved over time
               </p>
             </div>
             
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-white/50">
+            <div className="bg-white rounded-lg p-4 border border-gray-200">
               <div className="h-64 w-full">
                 <ResponsiveContainer>
                   <AreaChart data={data.timeline} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
@@ -167,14 +167,14 @@ export default function EvidenceImpactTracker() {
           {/* Enhanced Evidence Network */}
           <div className="flex gap-6">
             <div className="flex-1">
-              <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
-                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                   <h4 className="text-lg font-semibold text-gray-900">Evidence Network</h4>
-                  <p className="text-sm text-gray-600 mt-1">Interactive network showing relationships between evidence sources</p>
+                  <p className="text-sm text-gray-500 mt-1">Interactive network showing relationships between evidence sources</p>
                 </div>
                 
                 <div className="p-6">
-                  <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-white/50">
+                  <div className="bg-gray-50 rounded-lg p-4">
                     <div className="relative w-full h-96 overflow-hidden rounded-lg">
                       <svg width="100%" height="100%" viewBox="0 0 800 400">
                         {/* Enhanced Edges */}
@@ -262,10 +262,10 @@ export default function EvidenceImpactTracker() {
 
             {/* Enhanced Node Details */}
             {selectedNode && (
-              <div className="w-80 bg-gradient-to-br from-slate-50 to-purple-50 border border-gray-200 rounded-2xl shadow-inner p-6">
+              <div className="w-80 bg-white border border-gray-200 rounded-lg p-6">
                 <div className="mb-4">
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Evidence Details</h4>
-                  <div className="w-12 h-1 bg-purple-400 rounded-full"></div>
+                  <div className="w-12 h-1 bg-blue-500 rounded-full"></div>
                 </div>
                 
                 <div className="space-y-4">
@@ -309,7 +309,7 @@ export default function EvidenceImpactTracker() {
                           href={`https://doi.org/${selectedNode.doi}`} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-purple-600 hover:text-purple-800 font-medium underline"
+                          className="text-blue-600 hover:text-blue-800 font-medium underline"
                         >
                           {selectedNode.doi}
                         </a>
@@ -321,24 +321,24 @@ export default function EvidenceImpactTracker() {
             )}
           </div>
 
-          {/* Enhanced Top Publications */}
-          <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
-            <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+          {/* Clean Top Publications */}
+          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <h4 className="text-lg font-semibold text-gray-900">Top Publications</h4>
-              <p className="text-sm text-gray-600 mt-1">Most influential publications in your research area</p>
+              <p className="text-sm text-gray-500 mt-1">Most influential publications in your research area</p>
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-white/60">
+                <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Title</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">DOI</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white/30 divide-y divide-gray-200/50">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {data.topPublications.map((pub, index) => (
-                    <tr key={index} className="hover:bg-white/50 transition-colors">
+                    <tr key={index} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         {pub.title}
                       </td>
@@ -348,7 +348,7 @@ export default function EvidenceImpactTracker() {
                             href={`https://doi.org/${pub.doi}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-purple-600 hover:text-purple-800 font-medium underline"
+                            className="text-blue-600 hover:text-blue-800 font-medium underline"
                           >
                             {pub.doi}
                           </a>

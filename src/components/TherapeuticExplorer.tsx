@@ -78,14 +78,14 @@ export default function TherapeuticExplorer() {
         <h2 className="text-xl font-semibold text-gray-900">Therapeutic Explorer</h2>
       </div>
       
-      {/* Enhanced Engagement Card */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
-        {/* Header with guidance */}
-        <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100">
+      {/* Minimal Engagement Card */}
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        {/* Clean Header */}
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium text-gray-900">Topic Engagement Analysis</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <h3 className="text-lg font-semibold text-gray-900">Topic Engagement Analysis</h3>
+              <p className="text-sm text-gray-500 mt-1">
                 {selectedTopics.length === 0 
                   ? "Click topics below to compare their engagement levels" 
                   : `Comparing ${selectedTopics.length} selected topics`
@@ -95,7 +95,7 @@ export default function TherapeuticExplorer() {
             {selectedTopics.length > 0 && (
               <button
                 onClick={() => setSelectedTopics([])}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
                 <svg className="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
@@ -112,13 +112,13 @@ export default function TherapeuticExplorer() {
             <span className="text-sm font-medium text-gray-700">Quick select:</span>
             <button
               onClick={() => setSelectedTopics(data.sort((a, b) => b.engagement - a.engagement).slice(0, 5).map(t => t.topic))}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 transition-colors"
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
             >
               Top 5
             </button>
             <button
               onClick={() => setSelectedTopics(data.map(t => t.topic))}
-              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
             >
               All ({data.length})
             </button>
@@ -144,25 +144,25 @@ export default function TherapeuticExplorer() {
                 key={topic.topic}
                 className={`
                   group relative p-4 rounded-lg cursor-pointer transition-all duration-200 ease-out
-                  bg-gradient-to-br ${getHeatmapColor(topic.engagement)}
-                  hover:shadow-lg hover:-translate-y-0.5
                   ${selectedTopics.includes(topic.topic) 
-                    ? 'ring-2 ring-blue-400 ring-offset-2 ring-offset-white shadow-lg' 
-                    : 'shadow-sm hover:shadow-md'
+                    ? 'bg-blue-500 text-white shadow-md ring-2 ring-blue-300 ring-offset-2' 
+                    : 'bg-white border border-gray-200 text-gray-900 hover:border-gray-300 hover:shadow-md'
                   }
                   active:scale-95
                 `}
                 onClick={() => handleTopicToggle(topic.topic)}
               >
                 {selectedTopics.includes(topic.topic) && (
-                  <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md">
+                  <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md">
                     ✓
                   </div>
                 )}
                 
                 {/* Topic title with fixed typography */}
                 <div className="mb-4">
-                  <h4 className="font-medium text-sm leading-relaxed text-white line-clamp-3 break-words">
+                  <h4 className={`font-medium text-sm leading-relaxed line-clamp-3 break-words ${
+                    selectedTopics.includes(topic.topic) ? 'text-white' : 'text-gray-900'
+                  }`}>
                     {topic.topic}
                   </h4>
                 </div>
@@ -170,18 +170,26 @@ export default function TherapeuticExplorer() {
                 {/* Engagement percentage with clean layout */}
                 <div className="mb-3">
                   <div className="flex items-center justify-between">
-                    <div className="text-xl font-bold tracking-tight text-white">
+                    <div className={`text-xl font-bold tracking-tight ${
+                      selectedTopics.includes(topic.topic) ? 'text-white' : 'text-blue-600'
+                    }`}>
                       {(topic.engagement * 100).toFixed(1)}%
                     </div>
-                    <div className="text-xs font-medium bg-black/10 text-white px-2 py-1 rounded-md">
+                    <div className={`text-xs font-medium px-2 py-1 rounded-md ${
+                      selectedTopics.includes(topic.topic) 
+                        ? 'bg-white/20 text-white' 
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
                       {getIntensityLabel(topic.engagement)}
                     </div>
                   </div>
                 </div>
                 
                 {/* Search volume with clean design */}
-                <div className="flex items-center text-xs font-medium text-white">
-                  <svg className="w-3.5 h-3.5 mr-1.5 opacity-80 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <div className={`flex items-center text-xs font-medium ${
+                  selectedTopics.includes(topic.topic) ? 'text-white' : 'text-gray-500'
+                }`}>
+                  <svg className="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                   </svg>
                   <span>{topic.searchVolume.toLocaleString()}</span>
@@ -191,36 +199,33 @@ export default function TherapeuticExplorer() {
             ))}
           </div>
 
-          {/* Enhanced Chart Section with improved design */}
+          {/* Clean Chart Section */}
           <div className={`transition-all duration-700 ease-in-out ${
             selectedTopics.length > 0 
               ? 'max-h-[500px] opacity-100 mb-0' 
               : 'max-h-0 opacity-0 overflow-hidden'
           }`}>
             {selectedTopics.length > 0 && (
-              <div className="relative p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 border border-slate-200 rounded-2xl shadow-inner">
-                {/* Header with enhanced styling */}
+              <div className="relative p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                {/* Clean Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h4 className="text-lg font-semibold text-gray-900">
                       Engagement Comparison
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-500">
                       Analyzing {selectedTopics.length} selected topic{selectedTopics.length !== 1 ? 's' : ''}
                     </p>
                   </div>
                   
-                  {/* Chart controls */}
-                  <div className="flex items-center space-x-2">
-                    <div className="flex items-center text-xs text-gray-500 bg-white/50 px-3 py-1.5 rounded-lg">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                      Engagement Level
-                    </div>
+                  <div className="flex items-center text-xs text-gray-500 bg-white px-3 py-1.5 rounded-md border border-gray-200">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                    Engagement Level
                   </div>
                 </div>
                 
-                {/* Chart container with improved styling */}
-                <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-white/50">
+                {/* Clean Chart container */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="h-72 w-full">
                     <ResponsiveContainer>
                       <BarChart 
