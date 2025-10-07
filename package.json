@@ -37,5 +37,11 @@
   "devDependencies": {
     "@types/papaparse": "^5.3.16",
     "@types/react-simple-maps": "^3.0.6"
+  },
+  "overrides": {
+    "react-simple-maps": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }
