@@ -135,128 +135,226 @@ export default function SummaryGenerator() {
   };
 
   return (
-    <div>
-      <h2>Summary Generator</h2>
-      
-      <div style={{ marginBottom: 24 }}>
-        <button
-          onClick={generateSummary}
-          disabled={loading}
-          style={{
-            padding: "12px 24px",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: 4,
-            fontSize: 16,
-            cursor: loading ? "not-allowed" : "pointer"
-          }}
-        >
-          {loading ? "Generating..." : "Generate Summary"}
-        </button>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900">Summary Generator</h2>
       </div>
-
-      {summary && (
-        <div>
-          <div style={{ 
-            padding: 20, 
-            border: "1px solid #ddd", 
-            borderRadius: 8, 
-            backgroundColor: "#f9f9f9",
-            marginBottom: 24
-          }}>
-            <h3>Generated Summary</h3>
-            <p style={{ fontSize: 12, color: "#666", marginBottom: 16 }}>
-              Generated at: {new Date(summary.generatedAt).toLocaleString()}
+      
+      {/* Enhanced Summary Generator Card */}
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+        {/* Header */}
+        <div className="px-6 py-4 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-100">
+          <div>
+            <h3 className="text-lg font-medium text-gray-900">Summary & Export</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Generate comprehensive summaries and export your analysis data
             </p>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
-              {/* Key Metrics */}
-              <div>
-                <h4>Key Metrics</h4>
-                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                  {summary.keyMetrics.map((metric, index) => (
-                    <li key={index} style={{ marginBottom: 8 }}>{metric}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Emerging Topics */}
-              <div>
-                <h4>Emerging Topics</h4>
-                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                  {summary.emergingTopics.map((topic, index) => (
-                    <li key={index} style={{ marginBottom: 8 }}>{topic}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Knowledge Gaps */}
-              <div>
-                <h4>Knowledge Gaps</h4>
-                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                  {summary.knowledgeGaps.map((gap, index) => (
-                    <li key={index} style={{ marginBottom: 8 }}>{gap}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Top Evidence */}
-              <div>
-                <h4>Top Evidence</h4>
-                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                  {summary.topEvidence.map((evidence, index) => (
-                    <li key={index} style={{ marginBottom: 8 }}>{evidence}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Regional Highlights */}
-              <div>
-                <h4>Regional Highlights</h4>
-                <ul style={{ margin: 0, paddingLeft: 20 }}>
-                  {summary.regionalHighlights.map((highlight, index) => (
-                    <li key={index} style={{ marginBottom: 8 }}>{highlight}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Export Buttons */}
-          <div style={{ display: "flex", gap: 12 }}>
-            <button
-              onClick={exportCSV}
-              disabled={exporting}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                cursor: exporting ? "not-allowed" : "pointer"
-              }}
-            >
-              {exporting ? "Exporting..." : "Export CSV"}
-            </button>
-            
-            <button
-              onClick={exportPDF}
-              disabled={exporting}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                cursor: exporting ? "not-allowed" : "pointer"
-              }}
-            >
-              {exporting ? "Exporting..." : "Export PDF"}
-            </button>
           </div>
         </div>
-      )}
+
+        <div className="p-6 space-y-8">
+          {/* Generate Summary Button */}
+          <div className="flex items-center justify-center">
+            <button
+              onClick={generateSummary}
+              disabled={loading}
+              className={`
+                inline-flex items-center px-6 py-3 text-base font-medium rounded-lg transition-all duration-200
+                ${loading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 hover:scale-105 active:scale-95'
+                }
+                text-white shadow-lg
+              `}
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generating Summary...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  Generate Summary
+                </>
+              )}
+            </button>
+          </div>
+
+          {summary && (
+            <div className="space-y-6">
+              {/* Enhanced Summary Content */}
+              <div className="bg-gradient-to-br from-slate-50 to-indigo-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
+                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-gray-900">Generated Summary</h4>
+                    <div className="text-sm text-gray-600 bg-white/60 px-3 py-1 rounded-full">
+                      Generated: {new Date(summary.generatedAt).toLocaleDateString()} at {new Date(summary.generatedAt).toLocaleTimeString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {/* Key Metrics Card */}
+                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-gray-900">Key Metrics</h5>
+                      </div>
+                      <ul className="space-y-2">
+                        {summary.keyMetrics.map((metric, index) => (
+                          <li key={index} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {metric}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Emerging Topics Card */}
+                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-gray-900">Emerging Topics</h5>
+                      </div>
+                      <ul className="space-y-2">
+                        {summary.emergingTopics.map((topic, index) => (
+                          <li key={index} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {topic}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Knowledge Gaps Card */}
+                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-gray-900">Knowledge Gaps</h5>
+                      </div>
+                      <ul className="space-y-2">
+                        {summary.knowledgeGaps.map((gap, index) => (
+                          <li key={index} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {gap}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Top Evidence Card */}
+                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-gray-900">Top Evidence</h5>
+                      </div>
+                      <ul className="space-y-2">
+                        {summary.topEvidence.map((evidence, index) => (
+                          <li key={index} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {evidence}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Regional Highlights Card */}
+                    <div className="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-white/50">
+                      <div className="flex items-center mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center mr-3">
+                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                          </svg>
+                        </div>
+                        <h5 className="font-semibold text-gray-900">Regional Highlights</h5>
+                      </div>
+                      <ul className="space-y-2">
+                        {summary.regionalHighlights.map((highlight, index) => (
+                          <li key={index} className="text-sm text-gray-700 flex items-start">
+                            <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                            {highlight}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Export Section */}
+              <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-gray-200 rounded-2xl shadow-inner overflow-hidden">
+                <div className="px-6 py-4 bg-white/50 border-b border-gray-200">
+                  <h4 className="text-lg font-semibold text-gray-900">Export Options</h4>
+                  <p className="text-sm text-gray-600 mt-1">Download your analysis data in different formats</p>
+                </div>
+                
+                <div className="p-6">
+                  <div className="flex flex-wrap gap-4 justify-center">
+                    <button
+                      onClick={exportCSV}
+                      disabled={exporting}
+                      className={`
+                        inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                        ${exporting 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:scale-105 active:scale-95'
+                        }
+                        text-white shadow-md
+                      `}
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/>
+                      </svg>
+                      {exporting ? "Exporting..." : "Export CSV"}
+                    </button>
+                    
+                    <button
+                      onClick={exportPDF}
+                      disabled={exporting}
+                      className={`
+                        inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                        ${exporting 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 hover:scale-105 active:scale-95'
+                        }
+                        text-white shadow-md
+                      `}
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                      </svg>
+                      {exporting ? "Exporting..." : "Export PDF"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
