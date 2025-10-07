@@ -2,10 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { useFilters } from '@/hooks/useFilters';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, startOfMonth, subMonths } from 'date-fns';
-import AspirinAnalytics from '@/components/AspirinAnalytics';
 type TrendType = 'therapeutic' | 'drug' | 'icd';
 
 // Helper functions
@@ -35,17 +33,8 @@ const getTrendingItems = (items: string[], patterns: number[][]) => {
 
 export default function TrendsChart() {
   const filteredData = useDashboardStore((state) => state.filteredData);
-  const { filters } = useFilters();
   const [trendType, setTrendType] = useState<TrendType>('drug');
   const [timeRange, setTimeRange] = useState<'3m' | '6m' | '12m'>('6m');
-  
-  // Check if aspirin is selected in the drug filter
-  const isAspirinSelected = useMemo(() => {
-    return filters.drug?.some(drug => 
-      drug.toLowerCase().includes('aspirin') || 
-      drug.toLowerCase().includes('acetylsalicylic')
-    ) || false;
-  }, [filters.drug]);
   
   // Generate trend data from filtered data
   const trendData = useMemo(() => {
@@ -140,11 +129,6 @@ export default function TrendsChart() {
   }, [filteredData, trendType, timeRange]);
   
   const colors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6'];
-  
-  // If aspirin is selected, show aspirin analytics instead of regular trends
-  if (isAspirinSelected) {
-    return <AspirinAnalytics />;
-  }
   
   return (
     <div className="p-6 bg-white">

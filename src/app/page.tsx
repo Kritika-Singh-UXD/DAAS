@@ -4,25 +4,10 @@ import { useState } from 'react';
 import FilterBar from '@/components/FilterBar';
 import FilterProvider from '@/components/FilterProvider';
 import AdvancedFiltersModal from '@/components/AdvancedFiltersModal';
-import TrendsChart from '@/components/TrendsChart';
-import UseCaseTemplates from '@/components/UseCaseTemplates';
-import KeyMetrics from '@/components/KeyMetrics';
-import TopInsights from '@/components/TopInsights';
-import { useFilters } from '@/hooks/useFilters';
-import { useMemo } from 'react';
 import { Activity } from 'lucide-react';
 
 export default function Dashboard() {
   const [advancedFiltersOpen, setAdvancedFiltersOpen] = useState(false);
-  const { filters } = useFilters();
-  
-  // Check if aspirin is selected in the drug filter
-  const isAspirinSelected = useMemo(() => {
-    return filters.drug?.some(drug => 
-      drug.toLowerCase().includes('aspirin') || 
-      drug.toLowerCase().includes('acetylsalicylic')
-    ) || false;
-  }, [filters.drug]);
   
   return (
     <FilterProvider>
@@ -52,33 +37,14 @@ export default function Dashboard() {
         {/* Main Content */}
         <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="space-y-8">
-              {/* Quick Start Templates */}
-              <UseCaseTemplates />
-
-              {/* Key Metrics Overview */}
-              <KeyMetrics />
-
-              {/* Main Analytics */}
-              {isAspirinSelected ? (
-                // When aspirin is selected, show only the aspirin analytics (full width)
-                <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
-                  <TrendsChart />
+            <div className="flex items-center justify-center min-h-[60vh]">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Activity className="w-8 h-8 text-gray-400" />
                 </div>
-              ) : (
-                // Default layout with trends chart and top insights
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Trends Chart - Left 2/3 */}
-                  <div className="lg:col-span-2">
-                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
-                      <TrendsChart />
-                    </div>
-                  </div>
-
-                  {/* Top Insights - Right 1/3 */}
-                  <TopInsights />
-                </div>
-              )}
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Empty Dashboard</h2>
+                <p className="text-gray-500">This is a clean slate for your new version</p>
+              </div>
             </div>
           </div>
         </main>
