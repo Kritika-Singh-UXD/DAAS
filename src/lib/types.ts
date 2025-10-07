@@ -2,6 +2,8 @@ export type RegionKey = "Global" | "Southern Europe" | "Italy" | "Spain" | "Port
 export type TherapeuticArea = "Oncology" | "Cardiology" | "Neurology";
 export type Specialty = "Oncologist" | "Radiologist" | "Pathologist" | "Internal Medicine";
 export type DataSourceType = "Guideline" | "Research" | "DrugDB" | "ClinicalTrial";
+export type AgeGroup = "child" | "adolescent" | "adult" | "elderly";
+export type Gender = "male" | "female" | "both";
 
 export interface Filters {
   region: RegionKey[];               // multi
@@ -9,6 +11,8 @@ export interface Filters {
   drugs: string[];                   // multi
   specialties: Specialty[];          // multi
   dataTypes: DataSourceType[];       // multi
+  ageGroups: AgeGroup[];             // multi
+  genders: Gender[];                 // multi
   timeRange: { from: string; to: string }; // ISO dates
 }
 

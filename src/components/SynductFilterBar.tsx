@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useFilters } from "@/store/filters";
-import type { RegionKey, TherapeuticArea, Specialty, DataSourceType } from "@/lib/types";
+import type { RegionKey, TherapeuticArea, Specialty, DataSourceType, AgeGroup, Gender } from "@/lib/types";
 
 const REGIONS: RegionKey[] = ["Global", "Southern Europe", "Italy", "Spain", "Portugal"];
 const THERAPEUTIC_AREAS: TherapeuticArea[] = ["Oncology", "Cardiology", "Neurology"];
 const SPECIALTIES: Specialty[] = ["Oncologist", "Radiologist", "Pathologist", "Internal Medicine"];
 const DATA_TYPES: DataSourceType[] = ["Guideline", "Research", "DrugDB", "ClinicalTrial"];
+const AGE_GROUPS: AgeGroup[] = ["child", "adolescent", "adult", "elderly"];
+const GENDERS: Gender[] = ["male", "female", "both"];
 const SAMPLE_DRUGS = ["Pembrolizumab", "Nivolumab", "Durvalumab", "Atezolizumab", "Bevacizumab", "Trastuzumab"];
 
 export default function SynductFilterBar() {
@@ -50,6 +52,20 @@ export default function SynductFilterBar() {
     setFilters({ dataTypes: newDataTypes });
   };
 
+  const handleAgeGroupChange = (ageGroup: AgeGroup, checked: boolean) => {
+    const newAgeGroups = checked 
+      ? [...filters.ageGroups, ageGroup]
+      : filters.ageGroups.filter(ag => ag !== ageGroup);
+    setFilters({ ageGroups: newAgeGroups });
+  };
+
+  const handleGenderChange = (gender: Gender, checked: boolean) => {
+    const newGenders = checked 
+      ? [...filters.genders, gender]
+      : filters.genders.filter(g => g !== gender);
+    setFilters({ genders: newGenders });
+  };
+
   const handleSaveScenario = () => {
     if (scenarioName.trim()) {
       saveScenario(scenarioName.trim());
@@ -62,7 +78,7 @@ export default function SynductFilterBar() {
     <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-900 mb-6">Filters</h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-8 gap-6 mb-6">
         
         {/* Regions */}
         <div className="space-y-3">
@@ -149,6 +165,42 @@ export default function SynductFilterBar() {
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
                 />
                 <span className="text-gray-600">{dataType}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Age Groups */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Age Groups</h4>
+          <div className="space-y-2">
+            {AGE_GROUPS.map(ageGroup => (
+              <label key={ageGroup} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.ageGroups.includes(ageGroup)}
+                  onChange={(e) => handleAgeGroupChange(ageGroup, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600 capitalize">{ageGroup}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Genders */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Gender</h4>
+          <div className="space-y-2">
+            {GENDERS.map(gender => (
+              <label key={gender} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.genders.includes(gender)}
+                  onChange={(e) => handleGenderChange(gender, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600 capitalize">{gender}</span>
               </label>
             ))}
           </div>

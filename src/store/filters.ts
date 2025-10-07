@@ -11,6 +11,8 @@ const initial: Filters = {
   drugs: [],
   specialties: [],
   dataTypes: ["Guideline", "Research", "DrugDB", "ClinicalTrial"],
+  ageGroups: [],
+  genders: [],
   timeRange: { from: defaultFrom, to: defaultTo }
 };
 
