@@ -4,7 +4,7 @@ const generateMockData = (): QAData[] => {
   const specialties = ['Cardiology', 'Oncology', 'Neurology', 'Endocrinology', 'Rheumatology', 'Psychiatry', 'Pediatrics', 'Internal Medicine'];
   const countries = ['USA', 'UK', 'Germany', 'France', 'Japan', 'Canada', 'Australia', 'Spain', 'Italy', 'Netherlands'];
   const roles = ['Physician', 'Nurse Practitioner', 'Pharmacist', 'Medical Student', 'Resident', 'Fellow'];
-  const drugs = ['Metformin', 'Atorvastatin', 'Lisinopril', 'Omeprazole', 'Amlodipine', 'Metoprolol', 'Simvastatin', 'Losartan', 'Gabapentin', 'Sertraline', 'Levothyroxine', 'Azithromycin'];
+  const drugs = ['Metformin', 'Atorvastatin', 'Lisinopril', 'Omeprazole', 'Amlodipine', 'Metoprolol', 'Simvastatin', 'Losartan', 'Gabapentin', 'Sertraline', 'Levothyroxine', 'Azithromycin', 'Aspirin', 'Acetylsalicylic acid', 'Ibuprofen', 'Clopidogrel', 'Warfarin'];
   const therapeuticAreas = ['Cardiovascular', 'Metabolic', 'CNS', 'Oncology', 'Immunology', 'Infectious Disease', 'Respiratory', 'Gastrointestinal'];
   const adverseReactions = ['renal', 'hepatic', 'neurological', 'cardiovascular', 'gastrointestinal', 'hematological'];
   

@@ -8,10 +8,21 @@ import TrendsChart from '@/components/TrendsChart';
 import UseCaseTemplates from '@/components/UseCaseTemplates';
 import KeyMetrics from '@/components/KeyMetrics';
 import TopInsights from '@/components/TopInsights';
+import { useFilters } from '@/hooks/useFilters';
+import { useMemo } from 'react';
 import { Activity } from 'lucide-react';
 
 export default function Dashboard() {
   const [advancedFiltersOpen, setAdvancedFiltersOpen] = useState(false);
+  const { filters } = useFilters();
+  
+  // Check if aspirin is selected in the drug filter
+  const isAspirinSelected = useMemo(() => {
+    return filters.drug?.some(drug => 
+      drug.toLowerCase().includes('aspirin') || 
+      drug.toLowerCase().includes('acetylsalicylic')
+    ) || false;
+  }, [filters.drug]);
   
   return (
     <FilterProvider>
@@ -49,17 +60,25 @@ export default function Dashboard() {
               <KeyMetrics />
 
               {/* Main Analytics */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Trends Chart - Left 2/3 */}
-                <div className="lg:col-span-2">
-                  <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
-                    <TrendsChart />
-                  </div>
+              {isAspirinSelected ? (
+                // When aspirin is selected, show only the aspirin analytics (full width)
+                <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
+                  <TrendsChart />
                 </div>
+              ) : (
+                // Default layout with trends chart and top insights
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Trends Chart - Left 2/3 */}
+                  <div className="lg:col-span-2">
+                    <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
+                      <TrendsChart />
+                    </div>
+                  </div>
 
-                {/* Top Insights - Right 1/3 */}
-                <TopInsights />
-              </div>
+                  {/* Top Insights - Right 1/3 */}
+                  <TopInsights />
+                </div>
+              )}
             </div>
           </div>
         </main>
