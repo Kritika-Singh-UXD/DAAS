@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import SynductFilterBar from "@/components/SynductFilterBar";
 import OverviewPanel from "@/components/OverviewPanel";
 import TherapeuticExplorer from "@/components/TherapeuticExplorer";
@@ -12,57 +12,39 @@ import SummaryGenerator from "@/components/SummaryGenerator";
 
 export default function Page() {
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      {/* Header */}
-      <header style={{ 
-        backgroundColor: "white", 
-        borderBottom: "1px solid #dee2e6", 
-        padding: "16px 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000
-      }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <h1 style={{ margin: 0, fontSize: 24, fontWeight: "bold" }}>Synduct Signals</h1>
-            <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-              <span style={{ color: "#007bff", fontWeight: "bold" }}>Dashboard</span>
-              <Link href="/reports" style={{ textDecoration: "none", color: "#6c757d" }}>Reports</Link>
-              <Link href="/scenarios" style={{ textDecoration: "none", color: "#6c757d" }}>Saved Scenarios</Link>
-              <Link href="/settings" style={{ textDecoration: "none", color: "#6c757d" }}>Settings</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
 
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: 16 }}>
-        <SynductFilterBar />
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="mb-8">
+          <SynductFilterBar />
+        </div>
         
-        <section id="overview">
+        <section id="overview" className="space-y-6">
           <OverviewPanel />
         </section>
         
-        <section id="therapeutic" style={{ marginTop: 48 }}>
+        <section id="therapeutic" className="space-y-6">
           <TherapeuticExplorer />
         </section>
         
-        <section id="drugtrends" style={{ marginTop: 48 }}>
+        <section id="drugtrends" className="space-y-6">
           <DrugTrendExplorer />
         </section>
         
-        <section id="gaps" style={{ marginTop: 48 }}>
+        <section id="gaps" className="space-y-6">
           <KnowledgeGapFinder />
         </section>
         
-        <section id="evidence" style={{ marginTop: 48 }}>
+        <section id="evidence" className="space-y-6">
           <EvidenceImpactTracker />
         </section>
         
-        <section id="geo" style={{ marginTop: 48 }}>
+        <section id="geo" className="space-y-6">
           <GeographicSpecialtyMap />
         </section>
         
-        <section id="summary" style={{ marginTop: 48 }}>
+        <section id="summary" className="space-y-6">
           <SummaryGenerator />
         </section>
       </main>

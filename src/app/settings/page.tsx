@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 interface AppSettings {
   theme: "light" | "dark" | "auto";
@@ -82,15 +82,11 @@ export default function SettingsPage() {
   };
 
   const SettingsSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div style={{ 
-      backgroundColor: "white", 
-      border: "1px solid #ddd", 
-      borderRadius: 8, 
-      padding: 24, 
-      marginBottom: 24 
-    }}>
-      <h3 style={{ margin: "0 0 20px 0", fontSize: 18, fontWeight: "bold" }}>{title}</h3>
-      {children}
+    <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 mb-6">{title}</h3>
+      <div className="space-y-6">
+        {children}
+      </div>
     </div>
   );
 
@@ -103,25 +99,18 @@ export default function SettingsPage() {
     description?: string; 
     children: React.ReactNode 
   }) => (
-    <div style={{ 
-      display: "flex", 
-      justifyContent: "space-between", 
-      alignItems: "flex-start", 
-      marginBottom: 20,
-      paddingBottom: 20,
-      borderBottom: "1px solid #f0f0f0"
-    }}>
-      <div style={{ flex: 1, marginRight: 20 }}>
-        <label style={{ fontWeight: "bold", display: "block", marginBottom: 4 }}>
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4 border-b border-gray-100 last:border-b-0">
+      <div className="flex-1">
+        <label className="block text-sm font-medium text-gray-900 mb-1">
           {label}
         </label>
         {description && (
-          <p style={{ margin: 0, fontSize: 14, color: "#6c757d" }}>
+          <p className="text-sm text-gray-500">
             {description}
           </p>
         )}
       </div>
-      <div style={{ minWidth: 200 }}>
+      <div className="sm:w-64">
         {children}
       </div>
     </div>
@@ -139,13 +128,7 @@ export default function SettingsPage() {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      style={{
-        width: "100%",
-        padding: 8,
-        border: "1px solid #ddd",
-        borderRadius: 4,
-        fontSize: 14
-      }}
+      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
     >
       {options.map(option => (
         <option key={option.value} value={option.value}>
@@ -162,14 +145,15 @@ export default function SettingsPage() {
     checked: boolean; 
     onChange: (checked: boolean) => void 
   }) => (
-    <label style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+    <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        style={{ marginRight: 8 }}
+        className="sr-only peer"
       />
-      <span>{checked ? "Enabled" : "Disabled"}</span>
+      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      <span className="ml-3 text-sm text-gray-900">{checked ? "Enabled" : "Disabled"}</span>
     </label>
   );
 
@@ -186,75 +170,42 @@ export default function SettingsPage() {
     max?: number; 
     suffix?: string 
   }) => (
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div className="flex items-center gap-2">
       <input
         type="number"
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value) || 0)}
         min={min}
         max={max}
-        style={{
-          width: 120,
-          padding: 8,
-          border: "1px solid #ddd",
-          borderRadius: 4,
-          fontSize: 14
-        }}
+        className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       />
-      {suffix && <span style={{ fontSize: 14, color: "#6c757d" }}>{suffix}</span>}
+      {suffix && <span className="text-sm text-gray-500">{suffix}</span>}
     </div>
   );
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      {/* Header */}
-      <header style={{ 
-        backgroundColor: "white", 
-        borderBottom: "1px solid #dee2e6", 
-        padding: "16px 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000
-      }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <h1 style={{ margin: 0, fontSize: 24, fontWeight: "bold" }}>Synduct Signals</h1>
-            <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-              <Link href="/" style={{ textDecoration: "none", color: "#6c757d" }}>Dashboard</Link>
-              <Link href="/reports" style={{ textDecoration: "none", color: "#6c757d" }}>Reports</Link>
-              <Link href="/scenarios" style={{ textDecoration: "none", color: "#6c757d" }}>Saved Scenarios</Link>
-              <span style={{ color: "#007bff", fontWeight: "bold" }}>Settings</span>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
 
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h2 style={{ margin: "0 0 8px 0" }}>Application Settings</h2>
-            <p style={{ color: "#6c757d", margin: 0 }}>
+            <h2 className="text-2xl font-semibold text-gray-900">Application Settings</h2>
+            <p className="text-gray-600 mt-1">
               Configure your dashboard preferences and default values
             </p>
           </div>
           {hasChanges && (
             <button
               onClick={saveSettings}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: "bold"
-              }}
+              className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
             >
               Save Changes
             </button>
           )}
         </div>
+
+        <div className="space-y-8">
 
         {/* Appearance Settings */}
         <SettingsSection title="Appearance">
@@ -405,14 +356,7 @@ export default function SettingsPage() {
           >
             <button
               onClick={() => setShowResetConfirm(true)}
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#ffc107",
-                color: "black",
-                border: "none",
-                borderRadius: 4,
-                cursor: "pointer"
-              }}
+              className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors font-medium"
             >
               Reset Settings
             </button>
@@ -424,14 +368,7 @@ export default function SettingsPage() {
           >
             <button
               onClick={clearAllData}
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: 4,
-                cursor: "pointer"
-              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
             >
               Clear All Data
             </button>
@@ -440,64 +377,36 @@ export default function SettingsPage() {
 
         {/* Application Info */}
         <SettingsSection title="About">
-          <div style={{ fontSize: 14, color: "#6c757d" }}>
-            <p><strong>Synduct Signals</strong></p>
-            <p>Version: 1.0.0</p>
+          <div className="space-y-3 text-sm text-gray-600">
+            <div>
+              <span className="font-semibold text-gray-900">Synduct Signals</span>
+              <span className="ml-2 text-gray-500">Version 1.0.0</span>
+            </div>
             <p>Built with Next.js, TypeScript, Recharts, and react-simple-maps</p>
             <p>Data is generated using deterministic mock APIs for demonstration purposes.</p>
           </div>
         </SettingsSection>
+        </div>
 
         {/* Reset Confirmation Modal */}
         {showResetConfirm && (
-          <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000
-          }}>
-            <div style={{
-              backgroundColor: "white",
-              padding: 24,
-              borderRadius: 8,
-              width: 400,
-              maxWidth: "90vw"
-            }}>
-              <h3 style={{ margin: "0 0 16px 0" }}>Reset Settings</h3>
-              <p style={{ margin: "0 0 20px 0" }}>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 shadow-xl">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Reset Settings</h3>
+              <p className="text-gray-600 mb-6">
                 Are you sure you want to reset all settings to their default values? 
                 This action cannot be undone.
               </p>
-              <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowResetConfirm(false)}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#6c757d",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: "pointer"
-                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={resetSettings}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#ffc107",
-                    color: "black",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: "pointer"
-                  }}
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors font-medium"
                 >
                   Reset Settings
                 </button>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 import { useFilters } from "@/store/filters";
 import type { Filters } from "@/lib/types";
 
@@ -132,165 +132,91 @@ export default function ScenariosPage() {
   };
 
   const ScenarioCard = ({ scenario }: { scenario: SavedScenario }) => (
-    <div style={{
-      border: "1px solid #ddd",
-      borderRadius: 8,
-      padding: 20,
-      backgroundColor: "white",
-      marginBottom: 16
-    }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-        <div>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 18, fontWeight: "bold" }}>
+    <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {scenario.name}
           </h3>
-          <p style={{ margin: "0 0 8px 0", color: "#6c757d", fontSize: 14 }}>
+          <p className="text-sm text-gray-500 mb-2">
             Saved: {new Date(scenario.savedAt).toLocaleString()}
           </p>
           {scenario.description && (
-            <p style={{ margin: "0 0 12px 0", fontSize: 14 }}>
+            <p className="text-sm text-gray-700 mb-3">
               {scenario.description}
             </p>
           )}
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleLoadScenario(scenario)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: 4,
-              cursor: "pointer",
-              fontSize: 14
-            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
           >
             Load & View
           </button>
           <button
             onClick={() => handleDuplicateScenario(scenario)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#6c757d",
-              color: "white",
-              border: "none",
-              borderRadius: 4,
-              cursor: "pointer",
-              fontSize: 14
-            }}
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium text-sm"
           >
             Duplicate
           </button>
           <button
             onClick={() => handleDeleteScenario(scenario.name)}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#dc3545",
-              color: "white",
-              border: "none",
-              borderRadius: 4,
-              cursor: "pointer",
-              fontSize: 14
-            }}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm"
           >
             Delete
           </button>
         </div>
       </div>
       
-      <div style={{ 
-        backgroundColor: "#f8f9fa", 
-        padding: 12, 
-        borderRadius: 4, 
-        fontSize: 12,
-        color: "#495057",
-        border: "1px solid #e9ecef"
-      }}>
-        <strong>Filter Configuration:</strong><br />
-        {formatFiltersPreview(scenario.filters)}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <div className="text-sm">
+          <span className="font-medium text-gray-900">Filter Configuration:</span>
+          <div className="mt-2 text-gray-600 text-xs leading-relaxed">
+            {formatFiltersPreview(scenario.filters)}
+          </div>
+        </div>
       </div>
     </div>
   );
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      {/* Header */}
-      <header style={{ 
-        backgroundColor: "white", 
-        borderBottom: "1px solid #dee2e6", 
-        padding: "16px 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000
-      }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <h1 style={{ margin: 0, fontSize: 24, fontWeight: "bold" }}>Synduct Signals</h1>
-            <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-              <Link href="/" style={{ textDecoration: "none", color: "#6c757d" }}>Dashboard</Link>
-              <Link href="/reports" style={{ textDecoration: "none", color: "#6c757d" }}>Reports</Link>
-              <span style={{ color: "#007bff", fontWeight: "bold" }}>Saved Scenarios</span>
-              <Link href="/settings" style={{ textDecoration: "none", color: "#6c757d" }}>Settings</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
 
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h2 style={{ margin: "0 0 8px 0" }}>Saved Scenarios</h2>
-            <p style={{ color: "#6c757d", margin: 0 }}>
+            <h2 className="text-2xl font-semibold text-gray-900">Saved Scenarios</h2>
+            <p className="text-gray-600 mt-1">
               Manage your saved filter configurations and analysis scenarios
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            style={{
-              padding: "12px 24px",
-              backgroundColor: "#28a745",
-              color: "white",
-              border: "none",
-              borderRadius: 4,
-              cursor: "pointer",
-              fontSize: 16,
-              fontWeight: "bold"
-            }}
+            className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
           >
             Save Current Scenario
           </button>
         </div>
 
         {scenarios.length === 0 ? (
-          <div style={{
-            textAlign: "center",
-            padding: 60,
-            backgroundColor: "white",
-            borderRadius: 8,
-            border: "1px solid #ddd"
-          }}>
-            <h3 style={{ color: "#6c757d" }}>No Saved Scenarios</h3>
-            <p style={{ color: "#6c757d" }}>
-              Create your first scenario by configuring filters on the dashboard and saving them.
-            </p>
-            <Link 
-              href="/"
-              style={{
-                display: "inline-block",
-                padding: "12px 24px",
-                backgroundColor: "#007bff",
-                color: "white",
-                textDecoration: "none",
-                borderRadius: 4,
-                marginTop: 16
-              }}
-            >
-              Go to Dashboard
-            </Link>
+          <div className="bg-white border border-gray-100 rounded-xl p-12 text-center shadow-sm">
+            <div className="max-w-md mx-auto">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No Saved Scenarios</h3>
+              <p className="text-gray-600 mb-6">
+                Create your first scenario by configuring filters on the dashboard and saving them.
+              </p>
+              <button
+                onClick={() => router.push("/")}
+                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Go to Dashboard
+              </button>
+            </div>
           </div>
         ) : (
-          <div>
+          <div className="space-y-4">
             {scenarios.map((scenario, index) => (
               <ScenarioCard key={index} scenario={scenario} />
             ))}
@@ -299,104 +225,62 @@ export default function ScenariosPage() {
 
         {/* Create Scenario Modal */}
         {showCreateModal && (
-          <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000
-          }}>
-            <div style={{
-              backgroundColor: "white",
-              padding: 24,
-              borderRadius: 8,
-              width: 500,
-              maxWidth: "90vw"
-            }}>
-              <h3 style={{ margin: "0 0 16px 0" }}>Save Current Scenario</h3>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4 shadow-xl">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Save Current Scenario</h3>
               
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>
-                  Scenario Name *
-                </label>
-                <input
-                  type="text"
-                  value={newScenarioName}
-                  onChange={(e) => setNewScenarioName(e.target.value)}
-                  placeholder="Enter scenario name..."
-                  style={{
-                    width: "100%",
-                    padding: 8,
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 14
-                  }}
-                />
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Scenario Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={newScenarioName}
+                    onChange={(e) => setNewScenarioName(e.target.value)}
+                    placeholder="Enter scenario name..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Description (Optional)
+                  </label>
+                  <textarea
+                    value={newScenarioDescription}
+                    onChange={(e) => setNewScenarioDescription(e.target.value)}
+                    placeholder="Describe this scenario..."
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical"
+                  />
+                </div>
+
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-900">Current Filter Settings:</span>
+                    <div className="mt-2 text-gray-600 text-xs leading-relaxed">
+                      {formatFiltersPreview(filters)}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: "block", marginBottom: 4, fontWeight: "bold" }}>
-                  Description (Optional)
-                </label>
-                <textarea
-                  value={newScenarioDescription}
-                  onChange={(e) => setNewScenarioDescription(e.target.value)}
-                  placeholder="Describe this scenario..."
-                  rows={3}
-                  style={{
-                    width: "100%",
-                    padding: 8,
-                    border: "1px solid #ddd",
-                    borderRadius: 4,
-                    fontSize: 14,
-                    resize: "vertical"
-                  }}
-                />
-              </div>
-
-              <div style={{ 
-                backgroundColor: "#f8f9fa", 
-                padding: 12, 
-                borderRadius: 4, 
-                marginBottom: 20,
-                fontSize: 12,
-                color: "#495057",
-                border: "1px solid #e9ecef"
-              }}>
-                <strong>Current Filter Settings:</strong><br />
-                {formatFiltersPreview(filters)}
-              </div>
-
-              <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#6c757d",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: "pointer"
-                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCreateScenario}
                   disabled={!newScenarioName.trim()}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: newScenarioName.trim() ? "#28a745" : "#6c757d",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 4,
-                    cursor: newScenarioName.trim() ? "pointer" : "not-allowed"
-                  }}
+                  className={`px-4 py-2 rounded-lg transition-colors font-medium ${
+                    newScenarioName.trim() 
+                      ? "bg-green-600 text-white hover:bg-green-700" 
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
                 >
                   Save Scenario
                 </button>

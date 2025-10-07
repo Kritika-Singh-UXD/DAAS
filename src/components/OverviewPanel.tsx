@@ -36,11 +36,23 @@ export default function OverviewPanel() {
   };
 
   if (loading) {
-    return <div style={{ padding: 20 }}>Loading overview...</div>;
+    return (
+      <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm">
+        <div className="flex items-center justify-center">
+          <div className="text-gray-500">Loading overview...</div>
+        </div>
+      </div>
+    );
   }
 
   if (!data) {
-    return <div style={{ padding: 20 }}>Failed to load overview data</div>;
+    return (
+      <div className="bg-white border border-gray-100 rounded-xl p-8 shadow-sm">
+        <div className="flex items-center justify-center">
+          <div className="text-gray-500">Failed to load overview data</div>
+        </div>
+      </div>
+    );
   }
 
   const formatDuration = (seconds: number) => {
@@ -50,16 +62,13 @@ export default function OverviewPanel() {
   };
 
   return (
-    <div>
-      <h2>Overview</h2>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-gray-900">Overview</h2>
+      </div>
       
       {/* KPI Cards */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-        gap: 16, 
-        marginBottom: 24 
-      }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <KPI 
           title="Total Sessions" 
           value={data.totalSessions}
@@ -89,9 +98,9 @@ export default function OverviewPanel() {
       </div>
 
       {/* Trend Chart */}
-      <div style={{ marginBottom: 24 }}>
-        <h3>Search Trend</h3>
-        <div style={{ height: 300, width: "100%" }}>
+      <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Search Trend</h3>
+        <div className="h-80 w-full">
           <ResponsiveContainer>
             <LineChart data={data.trend}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -107,7 +116,7 @@ export default function OverviewPanel() {
               <Line 
                 type="monotone" 
                 dataKey="searches" 
-                stroke="#8884d8" 
+                stroke="#3b82f6" 
                 strokeWidth={2}
                 dot={false}
               />
@@ -119,7 +128,7 @@ export default function OverviewPanel() {
                     x={point.date} 
                     y={point.searches} 
                     r={6} 
-                    fill="#ff7300"
+                    fill="#f59e0b"
                     label={{ value: point.note, position: "top" }}
                   />
                 ))

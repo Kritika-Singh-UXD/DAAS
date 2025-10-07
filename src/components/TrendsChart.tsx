@@ -60,8 +60,8 @@ export default function TrendsChart() {
           });
           break;
         case 'icd':
-          if (item.icdCodes) {
-            item.icdCodes.forEach(code => {
+          if (item.icd10Code) {
+            [item.icd10Code].forEach(code => {
               if (!grouped[code]) grouped[code] = [];
               grouped[code].push(item);
             });

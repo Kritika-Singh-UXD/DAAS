@@ -16,32 +16,18 @@ export default function KPI({ title, value, subtitle, onClick }: KPIProps) {
 
   return (
     <div 
-      style={{ 
-        border: "1px solid #ddd", 
-        padding: 16, 
-        borderRadius: 8, 
-        backgroundColor: "white",
-        cursor: onClick ? "pointer" : "default",
-        transition: "box-shadow 0.2s"
-      }}
+      className={`
+        bg-white border border-gray-100 rounded-xl p-4 shadow-sm transition-all duration-200
+        ${onClick ? 'cursor-pointer hover:shadow-md hover:border-gray-200' : 'cursor-default'}
+      `}
       onClick={handleClick}
-      onMouseEnter={(e) => {
-        if (onClick) {
-          e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (onClick) {
-          e.currentTarget.style.boxShadow = "none";
-        }
-      }}
     >
-      <h4 style={{ margin: "0 0 8px 0", fontSize: 14, color: "#666" }}>{title}</h4>
-      <div style={{ fontSize: 24, fontWeight: "bold", margin: "0 0 4px 0" }}>
+      <h4 className="text-sm font-medium text-gray-600 mb-2">{title}</h4>
+      <div className="text-2xl font-semibold text-gray-900 mb-1">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </div>
       {subtitle && (
-        <div style={{ fontSize: 12, color: "#888" }}>{subtitle}</div>
+        <div className="text-xs text-gray-500">{subtitle}</div>
       )}
     </div>
   );

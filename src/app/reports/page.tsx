@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import Navbar from "@/components/Navbar";
 import { useFilters } from "@/store/filters";
 import { 
   fetchOverview, 
@@ -24,6 +24,9 @@ export default function ReportsPage() {
   const { filters } = useFilters();
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [loading, setLoading] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exporting, setExporting] = useState<'pdf' | 'csv' | null>(null);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<{
     overview: KPIOverview | null;
     therapeutic: TherapeuticTopic[];
@@ -71,64 +74,209 @@ export default function ReportsPage() {
     loadAllData();
   }, [filters]);
 
+  // Close export menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(event.target as Node)) {
+        setShowExportMenu(false);
+      }
+    }
+
+    if (showExportMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showExportMenu]);
+
+  const exportToCSV = () => {
+    setExporting('csv');
+    try {
+      let csvContent = '';
+      
+      // Add header with timestamp and filters
+      csvContent += `Synduct Signals Report\n`;
+      csvContent += `Generated: ${new Date().toLocaleString()}\n`;
+      csvContent += `Active Tab: ${activeTab}\n\n`;
+      
+      // Export data based on active tab
+      switch (activeTab) {
+        case 'overview':
+          if (data.overview) {
+            csvContent += `KPI Overview\n`;
+            csvContent += `Metric,Value\n`;
+            csvContent += `Total Sessions,${data.overview.totalSessions}\n`;
+            csvContent += `Active Doctors,${data.overview.activeDoctors}\n`;
+            csvContent += `Average Session Duration,${Math.floor(data.overview.avgSessionDurationSec / 60)}m ${data.overview.avgSessionDurationSec % 60}s\n`;
+            csvContent += `Top Drugs,"${data.overview.topDrugs.join(', ')}"\n`;
+            csvContent += `Top Therapeutic Areas,"${data.overview.topTherapeuticAreas.join(', ')}"\n\n`;
+            
+            csvContent += `Trend Data\n`;
+            csvContent += `Date,Searches,Notes\n`;
+            data.overview.trend.forEach(point => {
+              csvContent += `${new Date(point.date).toLocaleDateString()},${point.searches},"${point.note || ''}"\n`;
+            });
+          }
+          break;
+        case 'therapeutic':
+          csvContent += `Therapeutic Topics\n`;
+          csvContent += `Topic,Search Volume,Engagement,Top Specialty,Guideline Sources,Research Sources,Drug DB Sources,Clinical Trial Sources\n`;
+          data.therapeutic.forEach(topic => {
+            csvContent += `"${topic.topic}",${topic.searchVolume},${(topic.engagement * 100).toFixed(1)}%,${topic.topSpecialty},${topic.sourceBreakdown.Guideline},${topic.sourceBreakdown.Research},${topic.sourceBreakdown.DrugDB},${topic.sourceBreakdown.ClinicalTrial}\n`;
+          });
+          break;
+        case 'drugTrends':
+          csvContent += `Drug Trends\n`;
+          csvContent += `Drug,Total Queries,CTR,Avg Session Time,Top Region,Top Specialty,Co-searched Terms\n`;
+          data.drugTrends.forEach(drug => {
+            csvContent += `"${drug.drug}",${drug.totalQueries},${(drug.ctr * 100).toFixed(1)}%,${Math.floor(drug.avgSessionTimeSec / 60)}m ${drug.avgSessionTimeSec % 60}s,${drug.topRegion},${drug.topSpecialty},"${drug.coSearched.join(', ')}"\n`;
+          });
+          break;
+        case 'gaps':
+          csvContent += `Knowledge Gaps\n`;
+          csvContent += `Topic,Volume,CTR,Gap Severity,Type,Specialty,Region,Suggested Action\n`;
+          data.gaps.forEach(gap => {
+            csvContent += `"${gap.topic}",${gap.volume},${(gap.ctr * 100).toFixed(1)}%,${(gap.volume * (1 - gap.ctr)).toFixed(0)},${gap.type},${gap.specialty},${gap.region},"${gap.suggestedAction}"\n`;
+          });
+          break;
+        case 'evidence':
+          if (data.evidence) {
+            csvContent += `Evidence Nodes\n`;
+            csvContent += `ID,Title,Type,Engagement,DOI,Released Date\n`;
+            data.evidence.nodes.forEach(node => {
+              csvContent += `${node.id},"${node.title}",${node.type},${(node.engagement * 100).toFixed(1)}%,${node.doi || ''},${new Date(node.releasedOn).toLocaleDateString()}\n`;
+            });
+          }
+          break;
+        case 'geography':
+          if (data.geography) {
+            csvContent += `Geographic Data\n`;
+            csvContent += `Region,Intensity Value,Top Drug,Avg Sessions per Doctor,Dominant Specialty\n`;
+            data.geography.points.forEach(point => {
+              csvContent += `${point.region},${(point.value * 100).toFixed(1)}%,${point.topDrug},${point.avgSessionsPerDoctor},${point.dominantSpecialty}\n`;
+            });
+          }
+          break;
+      }
+
+      // Create and download CSV
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `synduct-report-${activeTab}-${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error('CSV export failed:', error);
+      alert('Failed to export CSV. Please try again.');
+    } finally {
+      setExporting(null);
+      setShowExportMenu(false);
+    }
+  };
+
+  const exportToPDF = async () => {
+    setExporting('pdf');
+    try {
+      // Dynamic import to avoid SSR issues
+      const { jsPDF } = await import('jspdf');
+      const html2canvas = (await import('html2canvas')).default;
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      
+      // Add header
+      pdf.setFontSize(20);
+      pdf.text('Synduct Signals Report', 20, 20);
+      
+      pdf.setFontSize(12);
+      pdf.text(`Generated: ${new Date().toLocaleString()}`, 20, 30);
+      pdf.text(`Report Type: ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`, 20, 40);
+      
+      // Capture the table content
+      const element = document.querySelector('.min-h-96') as HTMLElement;
+      if (element) {
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pageWidth - 40;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        let heightLeft = imgHeight;
+        let position = 50;
+        
+        // Add first page
+        if (heightLeft <= pageHeight - 60) {
+          pdf.addImage(imgData, 'PNG', 20, position, imgWidth, imgHeight);
+        } else {
+          pdf.addImage(imgData, 'PNG', 20, position, imgWidth, pageHeight - 60);
+          heightLeft -= (pageHeight - 60);
+          
+          // Add additional pages if needed
+          while (heightLeft > 0) {
+            pdf.addPage();
+            position = heightLeft - imgHeight + 20;
+            pdf.addImage(imgData, 'PNG', 20, position, imgWidth, heightLeft > pageHeight - 40 ? pageHeight - 40 : heightLeft);
+            heightLeft -= (pageHeight - 40);
+          }
+        }
+      }
+      
+      pdf.save(`synduct-report-${activeTab}-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setExporting(null);
+      setShowExportMenu(false);
+    }
+  };
+
   const TabButton = ({ id, label, active }: { id: string; label: string; active: boolean }) => (
     <button
       onClick={() => setActiveTab(id)}
-      style={{
-        padding: "12px 24px",
-        backgroundColor: active ? "#007bff" : "#f8f9fa",
-        color: active ? "white" : "black",
-        border: "1px solid #ddd",
-        borderRadius: active ? "8px 8px 0 0" : "8px",
-        marginRight: 4,
-        cursor: "pointer",
-        fontWeight: active ? "bold" : "normal"
-      }}
+      className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
+        active 
+          ? "text-blue-600 border-blue-600 bg-blue-50" 
+          : "text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300"
+      }`}
     >
       {label}
     </button>
   );
 
   const TableContainer = ({ children }: { children: React.ReactNode }) => (
-    <div style={{ 
-      overflowX: "auto", 
-      border: "1px solid #ddd", 
-      borderRadius: "0 8px 8px 8px",
-      backgroundColor: "white"
-    }}>
-      {children}
+    <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+      <div className="overflow-x-auto">
+        {children}
+      </div>
     </div>
   );
 
   const Table = ({ children }: { children: React.ReactNode }) => (
-    <table style={{ 
-      width: "100%", 
-      borderCollapse: "collapse",
-      fontSize: 14
-    }}>
+    <table className="w-full text-sm">
       {children}
     </table>
   );
 
   const TableHeader = ({ children }: { children: React.ReactNode }) => (
-    <thead style={{ backgroundColor: "#f8f9fa" }}>
+    <thead className="bg-gray-50 border-b border-gray-100">
       {children}
     </thead>
   );
 
   const TableRow = ({ children }: { children: React.ReactNode }) => (
-    <tr style={{ borderBottom: "1px solid #eee" }}>
+    <tr className="border-b border-gray-100 hover:bg-gray-50">
       {children}
     </tr>
   );
 
   const TableCell = ({ children, header = false }: { children: React.ReactNode; header?: boolean }) => (
-    <td style={{ 
-      padding: "12px 16px", 
-      textAlign: header ? "left" : "left",
-      fontWeight: header ? "bold" : "normal",
-      borderRight: "1px solid #eee"
-    }}>
+    <td className={`px-4 py-3 text-left ${header ? "font-medium text-gray-900" : "text-gray-700"}`}>
       {children}
     </td>
   );
@@ -137,9 +285,10 @@ export default function ReportsPage() {
     if (!data.overview) return <div>No overview data</div>;
 
     return (
-      <div>
-        <h3>KPI Overview</h3>
-        <TableContainer>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">KPI Overview</h3>
+          <TableContainer>
           <Table>
             <TableHeader>
               <TableRow>
@@ -170,10 +319,12 @@ export default function ReportsPage() {
               </TableRow>
             </tbody>
           </Table>
-        </TableContainer>
+          </TableContainer>
+        </div>
 
-        <h3 style={{ marginTop: 32 }}>Trend Data</h3>
-        <TableContainer>
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Trend Data</h3>
+          <TableContainer>
           <Table>
             <TableHeader>
               <TableRow>
@@ -192,14 +343,16 @@ export default function ReportsPage() {
               ))}
             </tbody>
           </Table>
-        </TableContainer>
+          </TableContainer>
+        </div>
       </div>
     );
   };
 
-  const renderTherapeuticTable = () => (
-    <div>
-      <h3>Therapeutic Topics</h3>
+  const renderTherapeuticTable = () => {
+    return (
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Therapeutic Topics</h3>
       <TableContainer>
         <Table>
           <TableHeader>
@@ -231,11 +384,14 @@ export default function ReportsPage() {
         </Table>
       </TableContainer>
     </div>
-  );
+    );
+  };
 
-  const renderDrugTrendsTable = () => (
-    <div>
-      <h3>Drug Trends</h3>
+  const renderDrugTrendsTable = () => {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Drug Trends</h3>
       <TableContainer>
         <Table>
           <TableHeader>
@@ -263,12 +419,15 @@ export default function ReportsPage() {
             ))}
           </tbody>
         </Table>
-      </TableContainer>
+        </TableContainer>
+      </div>
 
-      <h3 style={{ marginTop: 32 }}>Drug Time Series Data</h3>
-      {data.drugTrends.map((drug, drugIndex) => (
-        <div key={drugIndex} style={{ marginBottom: 24 }}>
-          <h4>{drug.drug} - Volume Over Time</h4>
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Drug Time Series Data</h3>
+        <div className="space-y-4">
+          {data.drugTrends.map((drug, drugIndex) => (
+            <div key={drugIndex}>
+              <h4 className="text-base font-medium text-gray-800 mb-3">{drug.drug} - Volume Over Time</h4>
           <TableContainer>
             <Table>
               <TableHeader>
@@ -287,53 +446,58 @@ export default function ReportsPage() {
               </tbody>
             </Table>
           </TableContainer>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
-  );
+    );
+  };
 
-  const renderGapsTable = () => (
-    <div>
-      <h3>Knowledge Gaps</h3>
-      <TableContainer>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell header>Topic</TableCell>
-              <TableCell header>Volume</TableCell>
-              <TableCell header>CTR</TableCell>
-              <TableCell header>Gap Severity</TableCell>
-              <TableCell header>Type</TableCell>
-              <TableCell header>Specialty</TableCell>
-              <TableCell header>Region</TableCell>
-              <TableCell header>Suggested Action</TableCell>
-            </TableRow>
-          </TableHeader>
-          <tbody>
-            {data.gaps.map((gap, index) => (
-              <TableRow key={index}>
-                <TableCell>{gap.topic}</TableCell>
-                <TableCell>{gap.volume.toLocaleString()}</TableCell>
-                <TableCell>{(gap.ctr * 100).toFixed(1)}%</TableCell>
-                <TableCell>{(gap.volume * (1 - gap.ctr)).toFixed(0)}</TableCell>
-                <TableCell>{gap.type}</TableCell>
-                <TableCell>{gap.specialty}</TableCell>
-                <TableCell>{gap.region}</TableCell>
-                <TableCell>{gap.suggestedAction}</TableCell>
+  const renderGapsTable = () => {
+    return (
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Knowledge Gaps</h3>
+        <TableContainer>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell header>Topic</TableCell>
+                <TableCell header>Volume</TableCell>
+                <TableCell header>CTR</TableCell>
+                <TableCell header>Gap Severity</TableCell>
+                <TableCell header>Type</TableCell>
+                <TableCell header>Specialty</TableCell>
+                <TableCell header>Region</TableCell>
+                <TableCell header>Suggested Action</TableCell>
               </TableRow>
-            ))}
-          </tbody>
-        </Table>
-      </TableContainer>
-    </div>
-  );
+            </TableHeader>
+            <tbody>
+              {data.gaps.map((gap, index) => (
+                <TableRow key={index}>
+                  <TableCell>{gap.topic}</TableCell>
+                  <TableCell>{gap.volume.toLocaleString()}</TableCell>
+                  <TableCell>{(gap.ctr * 100).toFixed(1)}%</TableCell>
+                  <TableCell>{(gap.volume * (1 - gap.ctr)).toFixed(0)}</TableCell>
+                  <TableCell>{gap.type}</TableCell>
+                  <TableCell>{gap.specialty}</TableCell>
+                  <TableCell>{gap.region}</TableCell>
+                  <TableCell>{gap.suggestedAction}</TableCell>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  };
 
   const renderEvidenceTable = () => {
     if (!data.evidence) return <div>No evidence data</div>;
 
     return (
       <div>
-        <h3>Evidence Nodes</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Evidence Nodes</h3>
         <TableContainer>
           <Table>
             <TableHeader>
@@ -361,7 +525,7 @@ export default function ReportsPage() {
           </Table>
         </TableContainer>
 
-        <h3 style={{ marginTop: 32 }}>Evidence Network Connections</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4 mt-8">Evidence Network Connections</h3>
         <TableContainer>
           <Table>
             <TableHeader>
@@ -383,7 +547,7 @@ export default function ReportsPage() {
           </Table>
         </TableContainer>
 
-        <h3 style={{ marginTop: 32 }}>Evidence Timeline</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4 mt-8">Evidence Timeline</h3>
         <TableContainer>
           <Table>
             <TableHeader>
@@ -411,7 +575,7 @@ export default function ReportsPage() {
 
     return (
       <div>
-        <h3>Geographic Data Points</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Geographic Data Points</h3>
         <TableContainer>
           <Table>
             <TableHeader>
@@ -437,7 +601,7 @@ export default function ReportsPage() {
           </Table>
         </TableContainer>
 
-        <h3 style={{ marginTop: 32 }}>Specialty Engagement</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4 mt-8">Specialty Engagement</h3>
         <TableContainer>
           <Table>
             <TableHeader>
@@ -462,7 +626,11 @@ export default function ReportsPage() {
 
   const renderTabContent = () => {
     if (loading) {
-      return <div style={{ padding: 40, textAlign: "center" }}>Loading reports data...</div>;
+      return (
+        <div className="bg-white border border-gray-100 rounded-xl p-12 text-center shadow-sm">
+          <div className="text-gray-500">Loading reports data...</div>
+        </div>
+      );
     }
 
     switch (activeTab) {
@@ -484,38 +652,73 @@ export default function ReportsPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-      {/* Header */}
-      <header style={{ 
-        backgroundColor: "white", 
-        borderBottom: "1px solid #dee2e6", 
-        padding: "16px 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 1000
-      }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-            <h1 style={{ margin: 0, fontSize: 24, fontWeight: "bold" }}>Synduct Signals</h1>
-            <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-              <Link href="/" style={{ textDecoration: "none", color: "#6c757d" }}>Dashboard</Link>
-              <span style={{ color: "#007bff", fontWeight: "bold" }}>Reports</span>
-              <Link href="/scenarios" style={{ textDecoration: "none", color: "#6c757d" }}>Saved Scenarios</Link>
-              <Link href="/settings" style={{ textDecoration: "none", color: "#6c757d" }}>Settings</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
 
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: 24 }}>
-        <div style={{ marginBottom: 24 }}>
-          <h2>Raw Data Reports</h2>
-          <p style={{ color: "#6c757d", marginBottom: 24 }}>
-            Detailed tabular data for all dashboard metrics. Data is filtered based on current filter selections.
-          </p>
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900">Raw Data Reports</h2>
+              <p className="text-gray-600 mt-1">
+                Detailed tabular data for all dashboard metrics. Data is filtered based on current filter selections.
+              </p>
+            </div>
+            
+            {/* Export Report Button */}
+            <div className="relative" ref={exportMenuRef}>
+              <button
+                onClick={() => setShowExportMenu(!showExportMenu)}
+                disabled={loading || exporting !== null}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-colors ${
+                  loading || exporting !== null
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+              >
+                {exporting ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                    </svg>
+                    Exporting {exporting.toUpperCase()}...
+                  </span>
+                ) : (
+                  'Export Report'
+                )}
+              </button>
+              
+              {/* Export Dropdown Menu */}
+              {showExportMenu && !loading && exporting === null && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <div className="py-1">
+                    <button
+                      onClick={exportToPDF}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>
+                      </svg>
+                      Download as PDF
+                    </button>
+                    <button
+                      onClick={exportToCSV}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"/>
+                      </svg>
+                      Download as CSV
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Tab Navigation */}
-          <div style={{ marginBottom: 0 }}>
+          <div className="flex space-x-0 border-b border-gray-200 mb-6">
             <TabButton id="overview" label="Overview" active={activeTab === "overview"} />
             <TabButton id="therapeutic" label="Therapeutic Topics" active={activeTab === "therapeutic"} />
             <TabButton id="drugTrends" label="Drug Trends" active={activeTab === "drugTrends"} />
@@ -526,7 +729,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Tab Content */}
-        <div style={{ minHeight: 400 }}>
+        <div className="min-h-96">
           {renderTabContent()}
         </div>
       </main>

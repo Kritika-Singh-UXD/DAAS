@@ -59,185 +59,192 @@ export default function SynductFilterBar() {
   };
 
   return (
-    <div style={{ 
-      border: "1px solid #ccc", 
-      padding: 16, 
-      marginBottom: 24, 
-      borderRadius: 8,
-      backgroundColor: "#f9f9f9" 
-    }}>
-      <h3>Filters</h3>
+    <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-900 mb-6">Filters</h3>
       
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 16 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6">
         
         {/* Regions */}
-        <div>
-          <h4>Regions</h4>
-          {REGIONS.map(region => (
-            <label key={region} style={{ display: "block", marginBottom: 4 }}>
-              <input
-                type="checkbox"
-                checked={filters.region.includes(region)}
-                onChange={(e) => handleRegionChange(region, e.target.checked)}
-              />
-              {" "}{region}
-            </label>
-          ))}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Regions</h4>
+          <div className="space-y-2">
+            {REGIONS.map(region => (
+              <label key={region} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.region.includes(region)}
+                  onChange={(e) => handleRegionChange(region, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600">{region}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Therapeutic Areas */}
-        <div>
-          <h4>Therapeutic Areas</h4>
-          {THERAPEUTIC_AREAS.map(area => (
-            <label key={area} style={{ display: "block", marginBottom: 4 }}>
-              <input
-                type="checkbox"
-                checked={filters.therapeuticAreas.includes(area)}
-                onChange={(e) => handleTherapeuticAreaChange(area, e.target.checked)}
-              />
-              {" "}{area}
-            </label>
-          ))}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Therapeutic Areas</h4>
+          <div className="space-y-2">
+            {THERAPEUTIC_AREAS.map(area => (
+              <label key={area} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.therapeuticAreas.includes(area)}
+                  onChange={(e) => handleTherapeuticAreaChange(area, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600">{area}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Drugs */}
-        <div>
-          <h4>Drugs</h4>
-          {SAMPLE_DRUGS.map(drug => (
-            <label key={drug} style={{ display: "block", marginBottom: 4 }}>
-              <input
-                type="checkbox"
-                checked={filters.drugs.includes(drug)}
-                onChange={(e) => handleDrugChange(drug, e.target.checked)}
-              />
-              {" "}{drug}
-            </label>
-          ))}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Drugs</h4>
+          <div className="space-y-2">
+            {SAMPLE_DRUGS.map(drug => (
+              <label key={drug} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.drugs.includes(drug)}
+                  onChange={(e) => handleDrugChange(drug, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600">{drug}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Specialties */}
-        <div>
-          <h4>Specialties</h4>
-          {SPECIALTIES.map(specialty => (
-            <label key={specialty} style={{ display: "block", marginBottom: 4 }}>
-              <input
-                type="checkbox"
-                checked={filters.specialties.includes(specialty)}
-                onChange={(e) => handleSpecialtyChange(specialty, e.target.checked)}
-              />
-              {" "}{specialty}
-            </label>
-          ))}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Specialties</h4>
+          <div className="space-y-2">
+            {SPECIALTIES.map(specialty => (
+              <label key={specialty} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.specialties.includes(specialty)}
+                  onChange={(e) => handleSpecialtyChange(specialty, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600">{specialty}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Data Types */}
-        <div>
-          <h4>Data Types</h4>
-          {DATA_TYPES.map(dataType => (
-            <label key={dataType} style={{ display: "block", marginBottom: 4 }}>
-              <input
-                type="checkbox"
-                checked={filters.dataTypes.includes(dataType)}
-                onChange={(e) => handleDataTypeChange(dataType, e.target.checked)}
-              />
-              {" "}{dataType}
-            </label>
-          ))}
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Data Types</h4>
+          <div className="space-y-2">
+            {DATA_TYPES.map(dataType => (
+              <label key={dataType} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={filters.dataTypes.includes(dataType)}
+                  onChange={(e) => handleDataTypeChange(dataType, e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="text-gray-600">{dataType}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Date Range */}
-        <div>
-          <h4>Date Range</h4>
-          <div style={{ marginBottom: 8 }}>
-            <label>From:</label>
-            <input
-              type="date"
-              value={filters.timeRange.from.split('T')[0]}
-              onChange={(e) => setFilters({ 
-                timeRange: { 
-                  ...filters.timeRange, 
-                  from: new Date(e.target.value).toISOString() 
-                }
-              })}
-              style={{ marginLeft: 8, padding: 4 }}
-            />
-          </div>
-          <div>
-            <label>To:</label>
-            <input
-              type="date"
-              value={filters.timeRange.to.split('T')[0]}
-              onChange={(e) => setFilters({ 
-                timeRange: { 
-                  ...filters.timeRange, 
-                  to: new Date(e.target.value).toISOString() 
-                }
-              })}
-              style={{ marginLeft: 8, padding: 4 }}
-            />
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Date Range</h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">From</label>
+              <input
+                type="date"
+                value={filters.timeRange.from.split('T')[0]}
+                onChange={(e) => setFilters({ 
+                  timeRange: { 
+                    ...filters.timeRange, 
+                    from: new Date(e.target.value).toISOString() 
+                  }
+                })}
+                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">To</label>
+              <input
+                type="date"
+                value={filters.timeRange.to.split('T')[0]}
+                onChange={(e) => setFilters({ 
+                  timeRange: { 
+                    ...filters.timeRange, 
+                    to: new Date(e.target.value).toISOString() 
+                  }
+                })}
+                className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
         <button 
           onClick={reset}
-          style={{ padding: "8px 16px", backgroundColor: "#6c757d", color: "white", border: "none", borderRadius: 4 }}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
         >
           Reset
         </button>
         
         <button 
           onClick={() => setShowScenarios(!showScenarios)}
-          style={{ padding: "8px 16px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: 4 }}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Scenarios
         </button>
       </div>
 
       {showScenarios && (
-        <div style={{ marginTop: 16, padding: 16, border: "1px solid #ddd", borderRadius: 4, backgroundColor: "white" }}>
-          <h4>Scenario Management</h4>
+        <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <h4 className="text-sm font-medium text-gray-900 mb-4">Scenario Management</h4>
           
-          <div style={{ marginBottom: 16 }}>
+          <div className="flex flex-wrap gap-3 mb-4">
             <input
               type="text"
               placeholder="Scenario name"
               value={scenarioName}
               onChange={(e) => setScenarioName(e.target.value)}
-              style={{ padding: 8, marginRight: 8, width: 200 }}
+              className="flex-1 min-w-48 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <button 
               onClick={handleSaveScenario}
-              style={{ padding: "8px 16px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: 4 }}
+              className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-green-600 rounded-md hover:bg-green-700 transition-colors"
             >
               Save Current
             </button>
           </div>
 
           <div>
-            <h5>Saved Scenarios:</h5>
-            {listScenarios().map(name => (
-              <button
-                key={name}
-                onClick={() => {
-                  loadScenario(name);
-                  setShowScenarios(false);
-                }}
-                style={{ 
-                  display: "block", 
-                  margin: "4px 0", 
-                  padding: "4px 8px", 
-                  backgroundColor: "#f8f9fa", 
-                  border: "1px solid #ddd", 
-                  borderRadius: 4,
-                  cursor: "pointer"
-                }}
-              >
-                {name}
-              </button>
-            ))}
-            {listScenarios().length === 0 && <p>No saved scenarios</p>}
+            <h5 className="text-sm font-medium text-gray-700 mb-2">Saved Scenarios:</h5>
+            <div className="space-y-1">
+              {listScenarios().map(name => (
+                <button
+                  key={name}
+                  onClick={() => {
+                    loadScenario(name);
+                    setShowScenarios(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  {name}
+                </button>
+              ))}
+              {listScenarios().length === 0 && (
+                <p className="text-sm text-gray-500 italic">No saved scenarios</p>
+              )}
+            </div>
           </div>
         </div>
       )}
